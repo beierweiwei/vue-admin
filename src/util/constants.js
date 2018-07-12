@@ -71,6 +71,62 @@ export const pagesMap = [
     id: 16,
     field: 'pay_index',
     child: false
+  },
+  {
+    pid: 0,
+    name: '活动管理',
+    id: 17,
+    field: 'activity_index',
+    child: true
+  },
+  {
+    pid: 17,
+    name: '活动列表',
+    id: 1701,
+    field: 'activity_list',
+    child: false
+  },
+  {
+    pid: 0,
+    name: '文章管理',
+    id: 18,
+    field: 'artic_index',
+    child: true
+  },
+  {
+    pid: 18,
+    name: '文章列表',
+    id: 1801,
+    field: 'artic_list',
+    child: false
+  },
+  {
+    pid: 18,
+    name: '分类管理',
+    id: 1802,
+    field: 'artic_cate',
+    child: false
+  },
+  {
+    pid: 0,
+    name: '权限管理',
+    id: 19,
+    field: 'permit_index',
+    child: true
+  },
+  {
+    pid: 19,
+    name: '角色列表',
+    id: 1901,
+    field: 'permit_role',
+    child: false
+  },
+  {
+    pid: 19,
+    name: '权限设置',
+    id: 19,
+    field: 'permit_permit',
+    child: true
   }
   // tabel: '表格',
   // editalbeTabel: '可编辑表格',

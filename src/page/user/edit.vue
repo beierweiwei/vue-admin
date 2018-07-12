@@ -10,11 +10,6 @@
         <Input v-model="editData.editor.tel"/>
       </Col>
     </FormItem>
-    <FormItem label="密码" prop="password">
-      <Col span="20">
-        <Input v-model="editData.editor.password" type="password"/>
-      </Col>
-    </FormItem>
     <FormItem label="性别">
       <RadioGroup v-model="editData.editor.sex">
         <Radio :label="0">男</Radio>
@@ -37,20 +32,10 @@ export default {
   name: 'Edit',
   props: {
     editData: {}
-    // editData: [
-    //   {
-    //     nickname: '',
-    //     tel: '',
-    //     password: '',
-    //     sex: '',
-    //     birth: '',
-    //     address: []
-    //   }
-    // ]
   },
   data () {
     return {
-      
+
     }
   },
   components: {

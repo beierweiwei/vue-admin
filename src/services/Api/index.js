@@ -22,26 +22,16 @@ export function getOrderList () {
 }
 
 export function postLogin (data) {
-  return Http.post('/login/login', data, {
-    headers
-  })
+  return Http.post('/login/admin/login', data)
 }
 
 export function postRegister (data) {
-  return Http.post('/login/register', data, {
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    }
-  })
+  return Http.post('/login/admin/regist', data)
 }
 
 export function editProduct (data, id) {
   id = id || 'add'
-  return Http.post('/product/edit/' + id, data, {
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    }
-  })
+  return Http.post('/product/edit/' + id, data)
 }
 
 export function getProduct (id) {
