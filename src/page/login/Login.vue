@@ -12,7 +12,6 @@
       </FormItem>
       <FormItem>
         <Button type="primary" size="small" style="margin-top: -15px;" @click="handleSubmit('formCustom')">登陆</Button>
-        <router-link to="/login/register" class="text-to-register">未注册>></router-link>
       </FormItem>
     </Form>
   </div>
@@ -65,7 +64,6 @@ export default {
   position: absolute;
   width: 100%;
   height: 100%;
-  background: url('../../assets/imgs/login-bg.jpg') 100% 100%;
   form {
     width: 300px;
     position: absolute;

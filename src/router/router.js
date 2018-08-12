@@ -24,11 +24,11 @@ const loginRoute = [
     component: Login,
     title: '登陆'
   },
-  {
-    path: '/login/register',
-    name: 'register',
-    component: Register
-  },
+//  {
+//    path: '/login/register',
+//    name: 'register',
+//    component: Register
+//  },
   {
     path: '/login/admincenter',
     name: 'admincenter',

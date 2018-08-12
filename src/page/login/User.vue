@@ -124,7 +124,6 @@ export default {
     position: absolute;
     width: 100%;
     height: 100%;
-    background: url('../../assets/imgs/login-bg.jpg') 100% 100%;
     form {
       width: 300px;
       position: absolute;
