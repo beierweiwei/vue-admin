@@ -10,6 +10,11 @@
         <Input v-model="editData.editor.tel"/>
       </Col>
     </FormItem>
+    <FormItem label="金额">
+      <Col span="20">
+        <Input v-model="editData.editor.money"/>
+      </Col>
+    </FormItem>
     <FormItem label="性别">
       <RadioGroup v-model="editData.editor.sex">
         <Radio :label="0">男</Radio>
