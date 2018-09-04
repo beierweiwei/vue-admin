@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import {getProductList} from "../../services/Api";
+import {getProductList} from "../../services/Api"
 export default {
   name: 'product',
   data () {

@@ -17,10 +17,17 @@ export function updateUser (id, data) {
   return Http.post('/user/' + id, data, headers)
 }
 
-export function getOrderList () {
-  return Http.get('/orders/orderList')
+export function getOrderList (pageConfig) {
+  return Http.get('/order', {params: pageConfig})
 }
 
+export function getOrder (id) {
+  return Http.get('/order/' + id)
+}
+
+export function deleteOrder (id) {
+  return Http.post('/order/delete/' + id)
+}
 export function postLogin (data) {
   return Http.post('/login/admin/login', data)
 }
