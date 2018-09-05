@@ -8,6 +8,7 @@ import 'iview/dist/styles/iview.css'
 import './assets/style/main.less'
 import VueComponents from './components/common'
 import * as Api from '@/services/Api'
+import Http from '@/services/Api/Http'
 import help from '@/util/help'
 Vue.use(Iview)
 
@@ -15,6 +16,7 @@ Object.keys(VueComponents).forEach((key) => Vue.component(key, VueComponents[key
 
 Vue.config.productionTip = false
 Vue.prototype.Api = Api
+Vue.prototype.$Http = Http
 Vue.prototype.help = help
 /* eslint-disable no-new */
 new Vue({

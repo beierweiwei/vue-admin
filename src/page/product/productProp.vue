@@ -3,11 +3,11 @@
     <div class="container">商品列表</div>
     <div class="container">
       <div class="produt-tool">
-        <Button>批量编辑</Button>
+        <Button @click="batchAction">批量编辑</Button>
         <Button @click="editor.isShow = true">增加属性</Button>
       </div>
       <div class="product-list">
-        <Table border :columns="columns5" :data="list"></Table>
+        <Table border :columns="columns" :data="list"></Table>
       </div>
     </div>
     <Modal v-model="editor.isShow" @on-ok="submit">
@@ -53,7 +53,8 @@ export default {
   data () {
     return {
       list: [],
-      columns5: [
+      isBatch: false,
+      columns: [
         {
           title: '分类名',
           key: 'title',
@@ -171,7 +172,7 @@ export default {
     },
     getProductPropList () {
       this.Api.getProductPropList().then(res => {
-        this.list = res
+        this.list = res.list
       })
     },
     deleteProductProp (ids) {
@@ -210,6 +211,24 @@ export default {
       this.editor.form.name = ''
       this.editor.form.selector = ['']
       this.editor.form.sort = 0
+    },
+    batchAction () {
+      this.isBatch = !this.isBatch
+    }
+  },
+  watch: {
+    isBatch (val) {
+      let item = {
+        type: 'selection',
+        width: 60,
+        align: 'center'
+      }
+      console.log(val)
+      if (val) {
+        this.columns.unshift(item)
+      }else {
+        this.columns.shift()
+      }
     }
   },
   mounted () {

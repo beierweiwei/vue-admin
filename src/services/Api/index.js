@@ -45,8 +45,12 @@ export function getProduct (id) {
   return Http.get('/product/edit/' + id )
 }
 
-export function getProductList (cateId) {
-  return Http.get('/product/list')
+export function getProductList ({pageNum=1, pageSize=10, sort=""} =  {}) {
+  return Http.get('/product/list', {params: {pageNum, pageSize, sort}})
+}
+
+export function deleteProduct (id) {
+  return Http.post('/product/delete/' + id)
 }
 
 export function getAddressById(id) {
