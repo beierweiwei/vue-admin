@@ -71,7 +71,7 @@
     </FormItem>
     <FormItem label="子商品">
       <Row v-for="(subProd, idx) in formItem.subProds" :key="idx">
-        <Col>规格：{{subProd.props}}</Col>
+        <Col>规格：{{subProd.propItems}}</Col>
         <Col span="4"><Col span="8">价格：</Col><Col span="16"><Input v-model="subProd.price"/></Col></Col>
         <Col push="1" span="4"><Col span="8">库存：</Col><Col span="16"><Input v-model="subProd.stock"/></Col></Col>
         <Col push="2" span="4"><Col span="8">销量：</Col><Col span="16"><Input v-model="subProd.saleNum"/></Col></Col>
@@ -125,17 +125,17 @@ export default {
   data () {
     return {
       formItem: {
-        title: '2018新款 女士清凉连衣裙 小碎花连衣裙',
-        des: '2018新款 女士清凉连衣裙 小碎花连衣裙',
+        title: '',
+        des: '',
         isSale: 'true',
         price: 200,
         detail: '',
         date: '',
         thumbPiic: [
         ],
-        unit: '件',
+        unit: '',
         prop: '',
-        cateId: '5b3f790c3cb25a19528c7e46',
+        cateId: '',
         subProds: [],
         stock: 1000,
       },
@@ -188,9 +188,18 @@ export default {
       return check
     },
     submit () {
+      this.formItem.props = []
+      // getPorp which was selected
+      this.propsSelect.forEach((selector, idx) => {
+        if (selector.length >>> 0) {
+          this.formItem.props.push(this.propList[idx]._id)
+        }
+      })
       let data = {...this.formItem, thumbPic: this.uploadList.map((item) => item.url)}
       data.detail = tinymce.get('detail').getContent()
-      editProduct(data, this.id).then(() => location.reload())
+      editProduct(data, this.id).then(() => {
+        this.$Message.success(this.id ? '编辑成功!' : '编辑成功!')
+      })
     },
     getProduct (id) {
       return getProduct(id)
@@ -211,7 +220,8 @@ export default {
       if (this.id !== 'add') {
         this.getProduct(this.id).then(data => {
           this.formItem = data
-          this.propsSelect = _.zip(...data.subProds.map((sub) => sub.props.split(','))).map(prop => _.uniq(prop))
+          this.formItem.cateId = data.cateId && data.cateId._id
+          this.propsSelect = _.zip(...data.subProds.map((sub) => sub.propItems.split(','))).map(prop => _.uniq(prop))
           if (Array.isArray(data.thumbPic) && data.thumbPic.length > 0) {
             this.defaultList = data.thumbPic.map((pic) => {
               return {
@@ -233,7 +243,7 @@ export default {
       this.formItem.subProds = combinProp.map((item, idx) => {
         let exsit = this.formItem.subProds[idx]
         return (exsit && exsit.props === item.join(',') ? exsit : {
-          props: item.join(','),
+          propItems: item.join(','),
           propsIds: propsIds,
           price: this.formItem.price,
           isSale: this.formItem.isSale,

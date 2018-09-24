@@ -3,11 +3,16 @@
     <div class="container">商品列表</div>
     <div class="container">
       <div class="produt-tool">
-        <Button @click="batchAction">批量编辑</Button>
-        <Button @click="editor.isShow = true">增加属性</Button>
+        <Button @click="isBatch = !isBatch">批量编辑</Button>
+        <div class="batch-group" v-show="isBatch">
+          <Button @click="handleSelectAll(true)">全选</Button>
+          <Button @click="handleSelectAll(false)">全不选</Button>
+          <Button type="error" @click="batchAction('delete',)">删除</Button>
+        </div>
+        <Button class="fr" type="primary" @click="editor.isShow = true">增加属性</Button>
       </div>
       <div class="product-list">
-        <Table border :columns="columns" :data="list"></Table>
+        <Table border :columns="columns" :data="list" on-sort-change="changeSort" @on-selection-change="handleSelectChange"></Table>
       </div>
     </div>
     <Modal v-model="editor.isShow" @on-ok="submit">
@@ -53,6 +58,7 @@ export default {
   data () {
     return {
       list: [],
+      selectedIds: [],
       isBatch: false,
       columns: [
         {
@@ -172,7 +178,7 @@ export default {
     },
     getProductPropList () {
       this.Api.getProductPropList().then(res => {
-        this.list = res.list
+        this.list = res
       })
     },
     deleteProductProp (ids) {
@@ -212,8 +218,15 @@ export default {
       this.editor.form.selector = ['']
       this.editor.form.sort = 0
     },
-    batchAction () {
-      this.isBatch = !this.isBatch
+    batchAction(actionType, actionField, actionValue) {
+      this.$Http.post('/product/prop/batch', {ids: this.selectedIds, actionType, actionField,  actionValue}).then((res)  => {
+        this.$Message.success('操作成功！')
+        this.getProductPropList()
+        this.handleSelectAll(false)
+      })
+    },
+    handleSelectChange (selection) {
+      this.selectedIds = selection.map(row => row._id)
     }
   },
   watch: {

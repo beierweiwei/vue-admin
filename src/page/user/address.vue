@@ -116,10 +116,16 @@ export default {
 
     },
     showAddressEdit(id) {
-      this.editData.addressEditor.isShow = true
+      this.editData.addressId = id 
       // req addres by id
       getAddressById(id).then(res => {
-        console.log(res)
+        this.editData.addressEditor.name = res.name
+        this.editData.addressEditor.tel = res.tel 
+        this.editData.addressEditor.detail = res.detail
+        this.editData.addressEditor.address.prince = res.areaCode[0].code
+        this.editData.addressEditor.address.city = res.areaCode[1].code
+        this.editData.addressEditor.address.area = res.areaCode[2].code
+        this.editData.addressEditor.isShow = true
       })
     },
     remove (addressId) {

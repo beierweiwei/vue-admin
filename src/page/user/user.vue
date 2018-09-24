@@ -3,11 +3,18 @@
     <div class="container">用户列表</div>
     <div class="container">
       <div class="produt-tool">
-        <Button>批量编辑</Button>
-        <!--<Button @click="$router.push('product/detail/2')">增加商品</Button>-->
+        <Button @click="isBatch = !isBatch">批量编辑</Button>
+        <div class="batch-group" v-show="isBatch">
+          <Button @click="handleSelectAll(true)">全选</Button>
+          <Button @click="handleSelectAll(false)">全不选</Button>
+          <Button type="primary" @click="batchAction('edit',selectedIds, {block: false})">启用</Button>
+          <Button type="warning" @click="batchAction('edit', selectedIds, {block: true})">禁用</Button>
+          <Button type="error" @click="batchAction('delete', selectedIds)">删除</Button>
+        </div>
       </div>
       <div class="product-list">
-        <Table border :columns="columns5" :data="datas.list"></Table>
+        <Table border :columns="columns" :data="list" on-sort-change="changeSort" @on-selection-change="handleSelectChange" ref="table"></Table>
+        <Page style="margin-top: 10px" :total="count" :page-size="reqConfig.pageSize" @on-change="changePage" show-total></Page>
       </div>
     </div>
     <Modal v-model="editData.isShow" @on-ok="updateUser ">
@@ -15,7 +22,7 @@
     </Modal>
     <Modal class="address-editor-modal"
            v-model="editData.addressEditor.isShow"
-           @on-ok="AddAddress">
+           @on-ok="submitAddress">
       <AddressEditor :addressData="editData.addressEditor" v-if="editData.addressEditor.isShow"></AddressEditor>
     </Modal>
   </div>
@@ -27,26 +34,17 @@ export default {
   name: 'user',
   data () {
     return {
-      datas: {
-        count: 10,
-        page: 1,
-        perPages: 10,
-        list: [
-          {
-            _id: 10,
-            openid: '12312',
-            nickname: 'awang',
-            avatar: '',
-            sex: 0, // 性别 0 男 1 女
-            tel: '13268132987',
-            address: '湖北武汉',
-            birth: '1991-06-27',
-            ctime: '1999-12-12',
-            block: false
-          }
-        ]
+      isBatch: false,
+      selectedIds: [],
+      count: 0,
+      reqConfig: {
+        loading: true,
+        pageNum: 1,
+        pageSize: 10,
+        sort: '' 
       },
-      columns5: [
+      list: [],
+      columns: [
         {
           title: '用户id',
           key: '_id'
@@ -77,13 +75,23 @@ export default {
         {
           title: '禁用',
           key: 'block',
-          render (h, param) {
+          render: (h, param) => {
             let btnRender = null
+            let self = this
             if (!param.row.block) {
               btnRender = h('Button', {
                 props: {
                   type: 'error',
                   size: 'small'
+                },
+                on: {
+                  click: () => {
+                    self.Api.updateUser(param.row._id, {block: true})
+                    .then(res => {
+                      self.getUserList()
+                      self.$Message.success('更新成功！')
+                    })
+                  }
                 }
               }, '禁用')
             } else {
@@ -91,8 +99,17 @@ export default {
                 props: {
                   type: 'primary',
                   size: 'small'
+                },
+                on: {
+                  click: () => {
+                    self.Api.updateUser(param.row._id, {block: false})
+                    .then(res => {
+                      self.getUserList()
+                      self.$Message.success('更新成功！')
+                    })
+                  }
                 }
-              }, '恢复')
+              }, '启用')
             }
             return btnRender
           }
@@ -144,6 +161,7 @@ export default {
 
         },
         addressList: [],
+        addressId: 0,
         addressEditor: {
           name: '',
           tel: '',
@@ -167,6 +185,26 @@ export default {
     Edit
   },
   methods: {
+    initData () {
+      this.getUserList()
+      this.selectedIds = []
+    },
+    handleSelectAll (status) {
+      this.$refs.table.selectAll(status)
+    },
+    handleSelectChange (selection) {
+      this.selectedIds = selection.map(row => row._id)
+    },
+    changePage (page) {
+      this.getProdConfig.pageNum = page
+      this.getUserList()
+    },
+    changeSort ({column, key, order}) {
+      console.log(order)
+      let mapSort = {asc: '', desc: '-', nomal: ''}
+      this.getProdConfig.sort = order !== 'normal' ? mapSort[order] + key : ''
+      this.getUserList()
+    },
     getUser (userId) {
       getUser(userId).then((user) => {
         this.editData.editor = user
@@ -181,12 +219,12 @@ export default {
     updateUser () {
       this.Api.updateUser(this.editData.userId, this.editData.editor)
         .then(res => {
-          console.log(res)
           this.getUserList()
           this.$Message.success('更新成功！')
         })
     },
-    AddAddress () {
+    submitAddress () {
+      let id = this.editData.addressId || 0 
       const addressData = this.editData.addressEditor
       const areaData = Object.keys(addressData.address).map((key) => {
         let code = addressData.address[key]
@@ -204,18 +242,59 @@ export default {
         userId: this.editData.userId
 
       }
-      // todo const areaCode = addressData
-      this.Api.addAddress(data)
+      if (id) {
+        this.Api.updateAddress(id, data).then(res => {
+          this.getAddressList(this.editData.userId)
+          this.editData.addressEditor.isShow = false
+          id = 0
+        })
+      } else {
+         // todo const areaCode = addressData
+        this.Api.addAddress(data)
         .then(res => {
           this.getAddressList(this.editData.userId)
           this.editData.addressEditor.isShow = false
+          id = 0
         })
+      }
+     
     },
     getUserList() {
       return getUserList().then(res => {
-        console.log(res)
-        this.datas.list = res.list
+        this.list = res.list
       })
+    },
+    batchAction (actionType, ids, modify) {
+      if (!ids) return
+      const isBatch = Array.isArray(ids)
+      //todo
+      switch (actionType) {
+        case 'edit':
+          let updateAct = isBatch ? this.Api.updateUsers : this.Api.updateUser
+          updateAct(ids, modify).then(() => this.$Message.success('编辑成功') && this.initData())
+          .catch(err => this.$Message.err('编辑失败！'))
+          break
+        case 'delete':
+          this.Api.deleteUser(ids).then(() => this.$Message.success('删除成功！') && this.initData())
+            .catch(err => this.$Message.err('删除失败！'))
+          break
+        default:
+      }
+    }
+  },
+  watch: {
+    isBatch (val) {
+      let item = {
+        type: 'selection',
+        width: 60,
+        align: 'center'
+      }
+      if (val) {
+        this.columns.unshift(item)
+      }else {
+        this.columns.shift()
+      }
+      this.$refs.table.selectAll(false)
     }
   },
   mounted () {

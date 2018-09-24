@@ -67,7 +67,7 @@ export default {
       // get curt area code
       code = this.addressData.address[type]
       // clear children data
-      if (idx <= 2) {
+      if (idx < 2) {
         for (let i = idx + 1; i > idx && i < 2; i++) {
           this.addressData.areaSelector[types[i]] = []
         }
@@ -86,9 +86,40 @@ export default {
           code: key
         }
       })
+    },
+    clearData () {
+      if (this.addressData.address) {
+        this.addressData.address.area = ''
+        this.addressData.address.prince = ''
+        this.addressData.address.city = ''
+      }
+      if (this.addressData.areaSelector) {
+        this.addressData.areaSelector.prince = []
+        this.addressData.areaSelector.city = []
+        this.addressData.areaSelector.area = []
+        this.addressData.areaSelector.prince = []
+      }
+      this.addressData.detail = ''
+      this.addressData.tel = ''
+      this.addressData.name = ''
     }
   },
+  destroyed () {
+    this.clearData()
+  },
   mounted () {
+    // this.clearData()
+    let address = this.addressData.address
+    let types = Object.keys(address)
+    types.map((key, idx) => {
+      let code = address[key]
+      if (code) {
+        if (idx === 2) return
+        getAreaList(code).then(list => {
+          this.addressData.areaSelector[types[idx + 1]] = this.rebuild(list.children)
+        })
+      }
+    })
     getAreaList().then((list) => {
       let resData = this.rebuild(list.children)
       this.addressData.areaSelector.prince = resData

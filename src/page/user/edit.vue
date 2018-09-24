@@ -32,7 +32,7 @@
 
 <script>
 import Address from './address'
-import {getUser} from '@/services/Api'
+import { getUser } from '@/services/Api'
 export default {
   name: 'Edit',
   props: {

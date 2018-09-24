@@ -124,9 +124,9 @@ export const pagesMap = [
   {
     pid: 19,
     name: '权限设置',
-    id: 19,
+    id: 1902,
     field: 'permit_permit',
-    child: true
+    child: false
   }
   // tabel: '表格',
   // editalbeTabel: '可编辑表格',

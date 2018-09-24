@@ -77,7 +77,10 @@ export default {
         },
         {
           title: '分类',
-          key: 'cateId'
+          key: 'cateId',
+          render: (h, params) => {
+            return h('span', [params.row.cateId && params.row.cateId.name])
+          }
         },
         {
           title: '销量',

@@ -69,10 +69,7 @@ export default {
   watch: {
     $route (val) {
       console.log('router-change')
-      console.log(val)
       let curtPageIdx = this.pages.findIndex((page) => page.name === val.name)
-      // let isInMenu = ~Object.keys(this.pagesMap).indexOf(val.name)
-      //this.curtPageIdx = !~curtPageIdx ? isInMenu ? (this.pages.push(val) && this.pages.length - 1) : this.curtPageIdx : curtPageIdx
       if (!~curtPageIdx) {
         this.pages.push(val)
         this.curtPageIdx = this.pages.length - 1

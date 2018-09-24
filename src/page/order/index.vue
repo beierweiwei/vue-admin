@@ -3,31 +3,46 @@
     <div class="container">订单列表</div>
     <div class="container">
       <div class="produt-tool">
-        <Button>批量编辑</Button>
-        <!--<Button @click="$router.push('product/detail/2')">增加商品</Button>-->
+        <div class="produt-tool">
+        <Button @click="isBatch = !isBatch">批量编辑</Button>
+        <div class="batch-group" v-show="isBatch">
+          <Button @click="handleSelectAll(true)">全选</Button>
+          <Button @click="handleSelectAll(false)">全不选</Button>
+          <Button type="error" @click="batchAction('delete', selectedIds)">删除</Button>
+        </div>
+      </div>
       </div>
       <div class="product-list">
-        <Table border :columns="columns5" :data="orders"></Table>
+        <Table border :columns="columns" :data="orders" on-sort-change="changeSort" @on-selection-change="handleSelectChange" ref="table"></Table>
       </div>
       <Page :total="pageConfig.count" @on-change="changePage" show-total style="margin-top: 10px"></page>
     </div>
-    <Modal v-model="editor.isShow">
-      <Form>
-        <FormItem>
-          
-        </FormItem>
-      </Form>
-    </Modal>
+    <orderEditor :editor=editor @update:list="getOrderList"></orderEditor>
   </div>
 </template>
 
 <script>
 import { orderStatus } from '@/util/constants'
-import { getOrderList, getOrder, deleteOrder } from '../../services/Api/index'
+import { getOrderList, getOrder, deleteOrders } from '../../services/Api/index'
+import orderEditor from './Edit.vue'
 export default {
   name: 'order',
+  components: {
+    orderEditor
+  },
   data () {
     return {
+      editor: {
+        isShow: false,
+        id: '',
+        form: {
+          orderNo: '',
+          address: {}
+
+        }
+      },
+      isBatch: false,
+      selectedIds: [],
       orders: [],
       pageConfig: {
         pageSize: 10,
@@ -35,10 +50,10 @@ export default {
         loading: false,
         count: 0
       },
-      columns5: [
+      columns: [
         {
           title: '订单编号',
-          key: '_id'
+          key: 'orderNo'
         },
         {
           title: '时间',
@@ -59,7 +74,8 @@ export default {
                 },
                 [
                   product.title + ' ',
-                  product.props + ' ',
+                  product.props.map((prop,i) => prop + ':' + product.propItems.split(',')[i])
+                    .join(','),
                   // h('img', {
                   //   attrs: {
                   //     src: product.thumbPic
@@ -139,23 +155,28 @@ export default {
                 },
                 on: {
                   click: () => {
-                    this.remove(params.index)
+                    this.deleteOrders(params.row._id)
                   }
                 }
               }, '删除')
             ])
           }
         }
-      ],
-      editor: {
-        isShow: false,
-        form: {
-
-        }
-      }
+      ]
     }
   },
   methods: {
+    handleSelectAll (status) {
+      this.$refs.table.selectAll(status)
+    },
+    handleSelectChange (selection) {
+      this.selectedIds = selection.map(row => row._id)
+    },
+    changeSort ({column, key, order}) {
+      let mapSort = {asc: '', desc: '-', nomal: ''}
+      this.getProdConfig.sort = order !== 'normal' ? mapSort[order] + key : ''
+      this.getUserList()
+    },
     remove (idx) {
       let order = this.orders[idx]
       if (order) {
@@ -171,18 +192,65 @@ export default {
         this.pageConfig.count = data.count
       })
     },
+    deleteOrders (ids) {
+      ids = ids || this.selectedIds 
+      if (!ids) return 
+      return deleteOrders(ids).then(res => {
+        this.$Message.success('删除成功！')
+        this.getOrderList()
+      })
+    },
+    updateOrders (ids) {
+      ids = ids  || this.selectedIds 
+      if (!ids) return 
+      return updateOrders(ids).then(res => {
+        this.$Message.success('编辑成功！')
+        this.getUserList()
+      })
+    },
     edit (idx) {
       let order = this.orders[idx]
       if (order && order._id) {
+        console.log(idx)
         this.editor.isShow = true
-        getOrder(order._id).then(data => {
-          this.editor.form = data
-        })
+        this.editor.id = order._id
       }
     },
     changePage (page) {
       this.pageConfig.pageNum = page
       this.getOrderList()
+    },
+    batchAction (actionType, ids, modify) {
+      ids = ids || this.selectedIds 
+      const isBatch = Array.isArray(ids)
+      //todo
+      switch (actionType) {
+        case 'edit':
+          this.updateOrders(ids, modify)
+          break
+        case 'delete':
+          this.deleteOrders(ids)
+          break
+        default:
+      }
+    },
+    initList () {
+
+    }
+  },
+  watch: {
+    isBatch (val) {
+      let item = {
+        type: 'selection',
+        width: 60,
+        align: 'center'
+      }
+      if (val) {
+        this.columns.unshift(item)
+      }else {
+        this.columns.shift()
+      }
+      this.$refs.table.selectAll(false)
     }
   },
   created () {
