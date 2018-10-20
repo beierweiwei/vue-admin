@@ -19,7 +19,6 @@
     </Layout>
   </div>
 </template>
-
 <script>
 import {SiderCop, TopBanner, LabelColumn} from '@/components/Layout'
 // import Login from '@/page/login/Login'
@@ -78,10 +77,15 @@ export default {
       }
     },
     curtPageIdx (val) {
-      if (val !== undefined && this.pages[val]) this.$router.push({name: this.pages[val].name})
+      if (val !== undefined && this.pages[val]) {
+        let route = this.pages[val]
+        let routeObj = {name: route.name, query: route.query, params: route.params}
+        this.$router.push(routeObj)
+      }
     }
   },
   mounted () {
+    window.SHOP_ADMIN_GLOBAL.pages = this.pages
     this.pages.push({name: 'home_index', meta: {title: '首页'}})
     if (!~this.pages.map(item => item.name).indexOf(this.$route.name)){
       this.pages.push(this.$route)

@@ -1,7 +1,7 @@
 export const REQ_CONFIG = {
   url: '/',
   method: 'get',
-  baseURL: '/'
+  baseURL: '/api'
 }
 export const SITE = {
   origin: 'http://127.0.0.1:9000'

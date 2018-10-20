@@ -9,9 +9,9 @@
           <Button @click="handleSelectAll(false)">全不选</Button>
           <Button type="primary" @click="batchAction('edit','isSale', 1)">上架</Button>
           <Button type="warning" @click="batchAction('edit', 'isSale', 0)">下架</Button>
-          <Button type="error" @click="batchAction('delete',)">删除</Button>
+          <Button type="error" @click="batchAction('delete')">删除</Button>
         </div>
-        <Button class="fr" type="primary" @click="$router.push('edit/add')" >增加商品</Button>
+        <Button class="fr" type="primary" @click="addProduct" >增加商品</Button>
       </div>
       <div class="product-list">
         <Table border :columns="columns" :data="prodList" @on-sort-change="changeSort" @on-selection-change="handleSelectChange" ref="table"></Table>
@@ -51,7 +51,7 @@ export default {
                     console.log(val)
                     this.edit(params.index, 'title', params.row.title)
                   }
-                  
+
                 },
                 'input': (val) => {
                   params.row.title = val
@@ -180,6 +180,10 @@ export default {
     }
   },
   methods: {
+    addProduct () {
+      let rd =  Math.random().toString().substr(2, 10)
+      this.$router.push({name: 'product_edit',query: {r: rd}, params: {id: 'add'}})
+    },
     getProductList () {
       return getProductList(this.getProdConfig).then((res) => {
         this.prodList = res.list

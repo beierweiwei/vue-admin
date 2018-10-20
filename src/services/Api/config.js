@@ -8,7 +8,7 @@ export default {
   // `baseURL` will be prepended to `url` unless `url` is absolute.
   // It can be convenient to set `baseURL` for an instance of axios to pass relative URLs
   // to methods of that instance.
-  baseURL: '/',
+  baseURL: '/api/',
 
   // `transformRequest` allows changes to the request data before it is sent to the server
   // This is only applicable for request methods 'PUT', 'POST', and 'PATCH'
@@ -135,13 +135,6 @@ export default {
   // supplies credentials.
   // This will set an `Proxy-Authorization` header, overwriting any existing
   // `Proxy-Authorization` custom headers you have set using `headers`.
-  proxy: {
-    host: '127.0.0.1',
-    port: 9000,
-    auth: {
-    }
-  }
-
   // `cancelToken` specifies a cancel token that can be used to cancel the request
   // (see Cancellation section below for details)
   // cancelToken: new CancelToken(function (cancel) {

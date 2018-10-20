@@ -1,44 +1,7 @@
 <template>
   <div class="layout-siderbar">
-      <div class="layout-logo">vue-admin></div>
+      <div class="layout-logo">my-shop</div>
       <Menu theme="dark" width="auto"  @on-select="go" :active-name="curtPage && curtPage.name">
-        <!--<MenuItem name="product_index" >-->
-          <!--<Icon type="home"></Icon>-->
-          <!--<span>{{pagesMap.product_index.name}}</span>-->
-
-
-        <!--&lt;!&ndash;</MenuItem>&ndash;&gt;-->
-        <!--<MenuItem name="order_index">-->
-          <!--<Icon type="flag"></Icon>-->
-          <!--<span>{{pagesMap.order_index.name}}</span>-->
-        <!--</MenuItem>-->
-        <!--<MenuItem name="delivery_index">-->
-          <!--<Icon type="edit"></Icon>-->
-          <!--<span>{{pagesMap.delivery_index.name}}</span>-->
-        <!--</MenuItem>-->
-        <!--<MenuItem name="user_index">-->
-          <!--<Icon type="edit"></Icon>-->
-          <!--<span>{{pagesMap.user_index.name}}</span>-->
-        <!--</MenuItem>-->
-        <!--<MenuItem name="pay_index">-->
-          <!--<Icon type="edit"></Icon>-->
-          <!--<span>{{pagesMap.pay_index.name}}</span>-->
-        <!--</MenuItem>-->
-        <!--<Submenu name="components">-->
-          <!--<template slot="title">-->
-            <!--<Icon type="ios-paper"></Icon>-->
-            <!--<span>{{pagesMap.components.name}}</span>-->
-          <!--</template>-->
-          <!--&lt;!&ndash;eslint-disable&ndash;&gt;-->
-          <!--<MenuItem name="richEditor">-->
-            <!--<Icon type="home"></Icon>-->
-            <!--<span>{{pagesMap.richEditor.name}}</span>-->
-          <!--</MenuItem>-->
-          <!--<MenuItem name="markdownEditor">-->
-            <!--<Icon type="flag"></Icon>-->
-            <!--<span>{{pagesMap.markdownEditor.name}}</span>-->
-          <!--</MenuItem>-->
-        <!--</Submenu>-->
         <template v-for="page in pagesMap">
           <Submenu  v-if="page.child" :name="page.field">
             <template slot="title">
@@ -99,6 +62,13 @@ export default {
   .layout-siderbar {
     height: 100%;
     overflow: scroll;
+  }
+  .layout-logo {
+    font-size: 26px;
+    font-weight: blod;
+    color: #fff;
+    text-align: center;
+    line-height: 50px;
   }
   .ivu-layout-sider-collapsed {
     .ivu-icon {

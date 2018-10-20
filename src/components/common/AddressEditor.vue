@@ -42,20 +42,7 @@ export default {
   },
   data () {
     return {
-      // addressData: {
-      //   name: '',
-      //   tel: '',
-      //   address: {
-      //     prince: '',
-      //     city: '',
-      //     area: ''
-      //   },
-      //   areaSelector: {
-      //     prince: [],
-      //     city: [],
-      //     area: []
-      //   }
-      // }
+
     }
   },
   methods: {

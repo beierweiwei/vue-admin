@@ -38,7 +38,7 @@
         :before-upload="handleBeforeUpload"
         multiple
         type="drag"
-        action="/upload"
+        action="/api/upload"
         style="display: inline-block;width:58px;">
         <div style="width: 58px;height:58px;line-height: 58px;">
           <Icon type="camera" size="20"></Icon>
@@ -124,11 +124,12 @@ export default {
   name: 'product-edit',
   data () {
     return {
+      random: '',
       formItem: {
         title: '',
         des: '',
-        isSale: 'true',
-        price: 200,
+        isSale: 1,
+        price: '',
         detail: '',
         date: '',
         thumbPiic: [
@@ -204,16 +205,36 @@ export default {
     getProduct (id) {
       return getProduct(id)
     },
-    clearData () {
+    initData () {
+      this.formItem = {
+        title: '',
+        des: '',
+        isSale: 1,
+        price: 200,
+        detail: '',
+        date: '',
+        thumbPiic: [],
+        unit: '',
+        prop: '',
+        cateId: '',
+        subProds: [],
+        stock: 1000
+      }
+      this.product = {}
+      this.editor = null
+      this.propsSelect = []
+      this.propsCombine = []
+      this.defaultList = []
+      this.imgName = ''
+      this.visible = false
       this.uploadList = []
+      this.baseUrl = SITE.origin
       this.cateList = []
       this.propList = []
     },
     init () {
-      // this.Api.getProductPropList().then(data => {
-      //   this.propList = data
-      //   // this.propsSelect = _.clone(data, 'deep')
-      // })
+      // 初始化数据
+      this.initData()
       this.Api.getProductCateList().then(data => this.cateList = data)
       this.id = this.$route.params.id || 'add'
 
@@ -259,6 +280,18 @@ export default {
       })
     }
   },
+  watch: {
+    '$route' (val) {
+      let id = val.params.id || 'add'
+      let random = val.query.r
+      if (id !== this.id || this.random !== random) {
+        // id更新了，则清空数据，然后重新请求数据
+        this.init()
+      }
+      this.ranodm = random
+    },
+
+  },
   mounted () {
     this.init()
     this.uploadList = this.$refs.upload.fileList
@@ -288,12 +321,14 @@ export default {
         }
       })
         .then(() => {
+
           tinymce.get('detail').setContent(this.formItem.detail)
         })
     })
   },
   destroyed () {
-    this.clearData()
+    console.log('destroy')
+    console.log('destroy')
     tinymce.get('detail').destroy()
   }
 }
