@@ -36,8 +36,7 @@ export default {
   //   }
   // },
   props: {
-    curtPage: {},
-    // pagesMap: {}
+
   },
   data () {
     return {

@@ -18,7 +18,6 @@ Vue.config.productionTip = false
 Vue.prototype.Api = Api
 Vue.prototype.$Http = Http
 Vue.prototype.help = help
-window.SHOP_ADMIN_GLOBAL = {}
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

@@ -37,7 +37,8 @@ export default {
         id: '',
         form: {
           orderNo: '',
-          address: {}
+          address: {},
+          track: {}
 
         }
       },
@@ -193,16 +194,16 @@ export default {
       })
     },
     deleteOrders (ids) {
-      ids = ids || this.selectedIds 
-      if (!ids) return 
+      ids = ids || this.selectedIds
+      if (!ids) return
       return deleteOrders(ids).then(res => {
         this.$Message.success('删除成功！')
         this.getOrderList()
       })
     },
     updateOrders (ids) {
-      ids = ids  || this.selectedIds 
-      if (!ids) return 
+      ids = ids  || this.selectedIds
+      if (!ids) return
       return updateOrders(ids).then(res => {
         this.$Message.success('编辑成功！')
         this.getUserList()
@@ -221,7 +222,7 @@ export default {
       this.getOrderList()
     },
     batchAction (actionType, ids, modify) {
-      ids = ids || this.selectedIds 
+      ids = ids || this.selectedIds
       const isBatch = Array.isArray(ids)
       //todo
       switch (actionType) {
