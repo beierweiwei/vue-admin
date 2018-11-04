@@ -143,3 +143,10 @@ export function getPropListByCateId(id) {
   if (!id) return
   return Http.get('/product/cate/:id/props')
 }
+export function getPostageList() {
+  return Http.get('/postage')
+}
+
+export function updatePostage(data) {
+  return Http.post('/postage/update', data)
+}

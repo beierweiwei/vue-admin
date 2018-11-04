@@ -67,16 +67,20 @@ export default {
   },
   watch: {
     $route (val) {
-      console.log('router-change')
+      if (!this.pages) return 
+      
       let curtPageIdx = this.pages.findIndex((page) => page.name === val.name)
+        
       if (!~curtPageIdx) {
         this.pages.push(val)
         this.curtPageIdx = this.pages.length - 1
       } else {
         this.curtPageIdx = curtPageIdx
+        this.pages.splice(curtPageIdx, 1, val)
       }
     },
     curtPageIdx (val) {
+      // todo 增加商品页面和此处有冲突，新打开商品页面，保留的是add的route，到编辑的时候编辑的参数会传步过去，考虑更改跳转模式
       if (val !== undefined && this.pages[val]) {
         let route = this.pages[val]
         let routeObj = {name: route.name, query: route.query, params: route.params}
@@ -85,7 +89,7 @@ export default {
     }
   },
   mounted () {
-    window.SHOP_ADMIN_GLOBAL.pages = this.pages
+    // window.SHOP_ADMIN_GLOBAL.pages = this.pages
     this.pages.push({name: 'home_index', meta: {title: '首页'}})
     if (!~this.pages.map(item => item.name).indexOf(this.$route.name)){
       this.pages.push(this.$route)
@@ -96,7 +100,8 @@ export default {
 }
 </script>
 
-<style>
+<style lang="less">
+  @import url(~@/assets/style/main.less);
   html, body, #main {
     height: 100%;
   }

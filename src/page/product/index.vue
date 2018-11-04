@@ -149,6 +149,7 @@ export default {
                 },
                 on: {
                   click: () => {
+                    console.log(params)
                     this.$router.push({name: 'product_edit', params: {id: params.row._id}})
                   }
                 }
@@ -202,7 +203,6 @@ export default {
     },
     edit (idx, field, value) {
       const product = this.prodList[idx]
-      console.log(this.prodList, idx, field, value)
       let data = {}
       data[field] = value
       editProduct(data, product._id).then(res  => {

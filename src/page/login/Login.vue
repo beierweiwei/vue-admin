@@ -10,6 +10,10 @@
       <FormItem label="密码" prop="password">
         <Input type="password" v-model="formCustom.password"/>
       </FormItem>
+      <FormItem label="验证码" prop="validateCode">
+        <Input type="text" v-model="formCustom.validateCode" style="width:100px"/>
+        <span class="captcha-box" @click="getValidateCode"><img    :src="validateCodeUrl"/></span>
+      </FormItem>
       <FormItem>
         <Button type="primary" size="small" style="margin-top: -15px;" @click="handleSubmit('formCustom')">登陆</Button>
       </FormItem>
@@ -22,9 +26,11 @@ export default {
   name: 'Login',
   data () {
     return {
+      validateCodeUrl: '/api/login/captcha',
       formCustom: {
         username: '',
-        password: ''
+        password: '',
+        validateCode: ''
       },
       ruleCustom: {
         password: [
@@ -33,6 +39,9 @@ export default {
         ],
         username: [
           {required: true, message: '请输入用户名', trigger: 'blur'}
+        ],
+        validateCode: [
+          {required: true, message: '请输入验证码', trigger: 'blur'}
         ]
       }
     }
@@ -47,6 +56,9 @@ export default {
         }
       })
     },
+    getValidateCode () {
+      this.validateCodeUrl = '/api/login/captcha?=' + Math.random().toString().substr(2, 10)
+    },
     postLogin () {
       postLogin(this.formCustom).then((res) => {
         this.$Message.success('登陆成功！')
@@ -54,6 +66,7 @@ export default {
         this.$router.push({name: 'home'})
       }).catch((err) => {
         this.$Message.error('登陆失败！')
+        this.getValidateCode()
       })
     }
   }
@@ -64,8 +77,15 @@ export default {
   position: absolute;
   width: 100%;
   height: 100%;
+  .captcha-box {
+    img {
+      // width: 25px;
+      height: 32px;
+      vertical-align: middle;
+    }
+  }
   form {
-    width: 300px;
+    width: 350px;
     position: absolute;
     right: 20px;
     top: 20%;

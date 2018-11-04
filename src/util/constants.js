@@ -47,45 +47,45 @@ export const pagesMap = [
   {
     pid: 0,
     id: 8,
-    name: '配送管理',
-    field: 'delivery_index',
+    name: '运费管理',
+    field: 'postage_index',
     child: false
   },
-  {
-    pid: 3,
-    name: '库存管理',
-    id: 9,
-    field: 'stock_index',
-    child: false
-  },
-  {
-    pid: 0,
-    name: '商家管理',
-    id: 13,
-    field: 'business_index',
-    child: false
-  },
-  {
-    pid: 0,
-    name: '支付管理',
-    id: 16,
-    field: 'pay_index',
-    child: false
-  },
-  {
-    pid: 0,
-    name: '活动管理',
-    id: 17,
-    field: 'activity_index',
-    child: true
-  },
-  {
-    pid: 17,
-    name: '活动列表',
-    id: 1701,
-    field: 'activity_list',
-    child: false
-  },
+  // {
+  //   pid: 3,
+  //   name: '库存管理',
+  //   id: 9,
+  //   field: 'stock_index',
+  //   child: false
+  // },
+  // {
+  //   pid: 0,
+  //   name: '店铺管理',
+  //   id: 13,
+  //   field: 'shop_index',
+  //   child: false
+  // },
+  // {
+  //   pid: 0,
+  //   name: '支付管理',
+  //   id: 16,
+  //   field: 'pay_index',
+  //   child: false
+  // },
+  // {
+  //   pid: 0,
+  //   name: '活动管理',
+  //   id: 17,
+  //   field: 'activity_index',
+  //   child: true
+  // },
+  // {
+  //   pid: 17,
+  //   name: '活动列表',
+  //   id: 1701,
+  //   field: 'activity_list',
+  //   child: false
+  // },
   {
     pid: 0,
     name: '文章管理',

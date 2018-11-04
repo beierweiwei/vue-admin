@@ -1,4 +1,5 @@
 import cookie from 'js-cookie'
+import { cloneDeep, isNumber}  from 'lodash'
 export function combine (array) {
   let all = []
   if (!(array && array.length > 0)) return
@@ -16,8 +17,9 @@ export function combine (array) {
   travel(0, [])
   return all
 }
-
 export default {
   cookie,
-  combine
+  combine,
+  cloneDeep,
+  isNumber
 }

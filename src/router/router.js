@@ -6,11 +6,12 @@ import ProductEdit from '@/page/product/ProductEdit'
 import ProductCate from '@/page/product/ProductCate'
 import ProductProp from '@/page/product/ProductProp'
 
-import Delivery from '@/page/delivery'
+import Postage from '@/page/postage'
 import Order from '@/page/order'
 import User from '@/page/user/user'
 import Pay from '@/page/pay/pay'
 import Trade from '@/page/trade/trade'
+import Shop from '@/page/shop'
 import Login from '@/page/login/Login'
 import Register from '@/page/login/Register'
 import Page404 from '@/page/error/404'
@@ -86,16 +87,16 @@ export const appRoutes = [
 
   },
   {
-    path: '/delivery',
-    name: 'delivery',
+    path: '/postage',
+    name: 'postage',
     component: Main,
     children: [
       {
         path: 'index',
-        component: Delivery,
-        name: 'delivery_index',
+        component: Postage,
+        name: 'postage_index',
         meta: {
-          title: '配送管理'
+          title: '运费管理'
         }
       }
     ]
@@ -130,6 +131,21 @@ export const appRoutes = [
         name: 'pay_index',
         meta: {
           title: '支付管理'
+        }
+      }
+    ]
+  },
+  {
+    path: '/shop',
+    name: 'shop',
+    component: Main,
+    children: [
+      {
+        path: 'index',
+        component: Shop,
+        name: 'shop_index',
+        meta: {
+          title: '店铺管理'
         }
       }
     ]

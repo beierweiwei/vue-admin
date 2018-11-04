@@ -282,6 +282,7 @@ export default {
   },
   watch: {
     '$route' (val) {
+      console.log(val)
       let id = val.params.id || 'add'
       let random = val.query.r
       if (id !== this.id || this.random !== random) {
@@ -327,8 +328,6 @@ export default {
     })
   },
   destroyed () {
-    console.log('destroy')
-    console.log('destroy')
     tinymce.get('detail').destroy()
   }
 }
