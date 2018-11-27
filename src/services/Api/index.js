@@ -10,16 +10,11 @@ export function getUserList () {
   return Http.get('/user/list')
 }
 
-export function updateUser (id, data) {
-  return Http.post('/user/' + id, data)
+export function updateUser (data) {
+  return Http.post('/user/update', data)
 }
-export function updateUsers (ids, modify) {
-  return Http.post('/user/update', {ids, modify})
-}
-export function deleteUsers (ids) {
-  if (!ids) return 
-  ids = Array.isArray(ids) ? ids : [ids]
-  return Http.post('/user/delete', {ids})
+export function deleteUser (id) {
+  return Http.post('/user/delete', {id})
 }
 export function getOrderList (pageConfig) {
   return Http.get('/order', {params: pageConfig})
@@ -46,12 +41,29 @@ export function updateOrder (id, modify) {
 } 
 
 export function postLogin (data) {
-  return Http.post('/login/admin/login', data)
+  return Http.post('/admin/login', data)
 }
 
-export function postRegister (data) {
-  return Http.post('/login/admin/regist', data)
+export function createAdmin (data) {
+  return Http.post('/admin', data)
 }
+
+export function getAdminList (data) {
+  return Http.get('/admin', {params: data})
+}
+
+export function getAdmin (id) {
+  return Http.get('/admin/' + id)
+}
+
+export function deleteAdmin (data) {
+  return Http.post('/admin/delete', data)
+}
+
+export function updateAdmin (data) {
+  return Http.post('/admin/update', data)
+}
+
 
 export function editProduct (data, id) {
   id = id || 'add'
@@ -149,4 +161,53 @@ export function getPostageList() {
 
 export function updatePostage(data) {
   return Http.post('/postage/update', data)
+}
+
+export function getArticleList(data) {
+  return Http.get('/article', {params: data})
+}
+
+export function getArticle(id) {
+  return Http.get('/article/' + id)
+}
+
+export function updateArticle(data) {
+  return Http.post('/article', data )      
+}
+
+export function deleteArticle(data) {
+  return Http.post('/article/delete', data)
+}
+
+export function getArticleCateList(data) {
+  return Http.get('/article/cate', {params: data})
+}
+
+export function getArticleCate(id) {
+  return Http.get('/article/cate/' + id)
+}
+
+export function updateArticleCate(data) {
+  return Http.post('/article/cate', data)
+}
+
+export function deleteArticleCate(data) {
+  return Http.post('/article/cate/delete', data)
+}
+
+export function getRoleList (data) {
+  return Http.get('/permission', {params: data})
+}
+
+export function getRole (id) {
+  return Http.get('/permission/' + id)
+} 
+export function createRole (data) {
+  return Http.post('/permission', data)
+}
+export function updateRole (data) {
+  return Http.post('/permission/update', data)
+}
+export function deleteRole (data) {
+  return Http.post('/permission/delete', data)
 }

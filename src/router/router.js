@@ -13,31 +13,36 @@ import Pay from '@/page/pay/pay'
 import Trade from '@/page/trade/trade'
 import Shop from '@/page/shop'
 import Login from '@/page/login/Login'
-import Register from '@/page/login/Register'
+// import Register from '@/page/login/Register'
 import Page404 from '@/page/error/404'
 import Page500 from '@/page/error/500'
 import Main from '@/page/Main'
 import AdminCenter from '@/page/login/User'
-const loginRoute = [
-  {
+import Article from '@/page/article/index'
+import ArticleCate from '@/page/article/cate'
+import ArticleEdit from '@/page/article/Edit'
+import Permission from '@/page/permission/Permission'
+import PermissionEdit from '@/page/permission/edit'
+import Role from '@/page/permission/Role'
+
+const loginRoute = [{
     path: '/login/login',
     name: 'login',
     component: Login,
     title: '登陆'
   },
-//  {
-//    path: '/login/register',
-//    name: 'register',
-//    component: Register
-//  },
+  //  {
+  //    path: '/login/register',
+  //    name: 'register',
+  //    component: Register
+  //  },
   {
     path: '/login/admincenter',
     name: 'admincenter',
     component: AdminCenter
   }
 ]
-const errorRoutes = [
-  {
+const errorRoutes = [{
     path: '*',
     name: '404',
     component: Page404,
@@ -50,8 +55,7 @@ const errorRoutes = [
   }
 ]
 
-export const appRoutes = [
-  {
+export const appRoutes = [{
     path: '/',
     redirect: '/home/index',
     title: '首页'
@@ -61,58 +65,52 @@ export const appRoutes = [
     name: 'home',
     component: Main,
     redirect: '/home/index',
-    children: [
-      {
-        path: 'index',
-        component: Home,
-        name: 'home_index',
-        title: '首页'
-      }
-    ]
+    children: [{
+      path: 'index',
+      component: Home,
+      name: 'home_index',
+      title: '首页'
+    }]
   },
   {
     path: '/order',
     name: 'order',
     component: Main,
-    children: [
-      {
-        path: 'index',
-        component: Order,
-        name: 'order_index',
-        meta: {
-          title: '订单管理'
-        }
+    children: [{
+      path: 'index',
+      component: Order,
+      name: 'order_index',
+      meta: {
+        title: '订单管理'
       }
-    ]
+    }]
 
   },
   {
     path: '/postage',
     name: 'postage',
     component: Main,
-    children: [
-      {
-        path: 'index',
-        component: Postage,
-        name: 'postage_index',
-        meta: {
-          title: '运费管理'
-        }
+    children: [{
+      path: 'index',
+      component: Postage,
+      name: 'postage_index',
+      meta: {
+        title: '运费管理'
       }
-    ]
+    }]
   },
   {
     path: '/user',
     name: 'user',
     component: Main,
     children: [{
-      path: 'index',
-      component: User,
-      name: 'user_index',
-      meta: {
-        title: '用户管理'
+        path: 'index',
+        component: User,
+        name: 'user_index',
+        meta: {
+          title: '用户管理'
+        }
       }
-    }
       // {
       //   path: 'edit',
       //   component: UserEditor,
@@ -124,50 +122,43 @@ export const appRoutes = [
     path: '/pay',
     name: 'pay',
     component: Main,
-    children: [
-      {
-        path: 'index',
-        component: Pay,
-        name: 'pay_index',
-        meta: {
-          title: '支付管理'
-        }
+    children: [{
+      path: 'index',
+      component: Pay,
+      name: 'pay_index',
+      meta: {
+        title: '支付管理'
       }
-    ]
+    }]
   },
   {
     path: '/shop',
     name: 'shop',
     component: Main,
-    children: [
-      {
-        path: 'index',
-        component: Shop,
-        name: 'shop_index',
-        meta: {
-          title: '店铺管理'
-        }
+    children: [{
+      path: 'index',
+      component: Shop,
+      name: 'shop_index',
+      meta: {
+        title: '店铺管理'
       }
-    ]
+    }]
   },
   {
     path: '/trade',
     name: 'trade',
     component: Main,
-    children: [
-      {
-        path: 'index',
-        component: Trade,
-        name: 'trade_index'
-      }
-    ]
+    children: [{
+      path: 'index',
+      component: Trade,
+      name: 'trade_index'
+    }]
   },
   {
     path: '/product',
     name: 'product',
     component: Main,
-    children: [
-      {
+    children: [{
         path: 'index',
         component: Product,
         name: 'product_index',
@@ -204,10 +195,78 @@ export const appRoutes = [
         }
       }
     ]
+  },
+  {
+    path: '/article',
+    name: 'article',
+    component: Main,
+    children: [{
+        path: 'index',
+        component: Article,
+        name: 'article_index',
+        meta: {
+          title: '文章列表',
+          ptitle: '文章管理'
+        }
+      },
+      {
+        path: 'edit/:id',
+        component: ArticleEdit,
+        name: 'article_edit',
+        meta: {
+          title: '新增/编辑文章',
+          ptitle: '文章管理'
+        }
+      },
+      {
+        path: 'cate',
+        component: ArticleCate,
+        name: 'article_cate',
+        meta: {
+          title: '文章分类',
+          ptitle: '文章分类'
+        }
+      }
+    ]
+  },
+  {
+    path: '/permission',
+    name: 'permission',
+    component: Main,
+    children: [{
+        path: 'index',
+        component: Permission,
+        name: 'permission_index',
+        meta: {
+          title: '账号列表',
+          ptitle: '权限管理'
+        }
+      },
+      {
+        path: 'edit/:id',
+        component: PermissionEdit,
+        name: 'permission_edit',
+        meta: {
+          title: '新增/编辑权限',
+          ptitle: '权限管理'
+        }
+      },
+      {
+        path: 'role',
+        component: Role,
+        name: 'permission_role',
+        meta: {
+          title: '角色编辑',
+          ptitle: '权限管理'
+        }
+      }
+    ]
   }
 ]
-export default [
+let allRouters = [
   ...appRoutes,
   ...loginRoute,
   ...errorRoutes
 ]
+
+export default allRouters

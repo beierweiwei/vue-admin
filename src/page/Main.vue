@@ -4,11 +4,12 @@
       <Sider hide-trigger v-model="isShow"  collapsible :collapsed-width="40" width="160">
         <SiderCop @check-menu="checkMenu"  :curtPage="curtPage"></SiderCop>
       </Sider>
-      <Layout>
-        <div>
-          <TopBanner :pages-map="pagesMap" :curt-page="curtPage" :user="user" ></TopBanner>
+      <Layout class="page">
+        
+        <TopBanner :pages-map="pagesMap" :curt-page="curtPage" :user="user" ></TopBanner>
+        <div style="margin-bottom: 6px; margin-top: 6px;">
+          <LabelColumn :pages="pages" :curt-page-idx.sync="curtPageIdx" :pages-map="pagesMap" @closePage="closePage"></LabelColumn>
         </div>
-        <LabelColumn :pages="pages" :curt-page-idx.sync="curtPageIdx" :pages-map="pagesMap" @closePage="closePage"></LabelColumn>
         <Content>
           <keep-alive>
             <router-view/>

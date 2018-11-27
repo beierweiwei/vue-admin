@@ -1,17 +1,17 @@
 <template>
-  <div class="product-page">
-    <div class="page-title">商品列表</div>
+  <div class="article-page">
+    <div class="page-title">文章列表</div>
     <div class="container">
       <div class="produt-tool">
         <Button @click="isBatch = !isBatch">批量编辑</Button>
         <div class="batch-group" v-show="isBatch">
           <Button @click="handleSelectAll(true)">全选</Button>
           <Button @click="handleSelectAll(false)">全不选</Button>
-          <Button type="primary" @click="batchAction('edit','isSale', 1)">上架</Button>
-          <Button type="warning" @click="batchAction('edit', 'isSale', 0)">下架</Button>
-          <Button type="error" @click="batchAction('delete')">删除</Button>
+          <Button type="primary" @click="updateArticle({id: selectedIds, isPublic: 1})">公开</Button>
+          <Button type="warning" @click="updateArticle({id: selectedIds, isPublic: 0})">私有</Button>
+          <Button type="error" @click="deleteArticle(selectedIds)">删除</Button>
         </div>
-        <Button class="fr" type="primary" @click="addProduct" >增加商品</Button>
+        <Button class="fr" type="primary" @click="addArticle" >增加文章</Button>
       </div>
       <div class="product-list">
         <Table border :columns="columns" :data="prodList" @on-sort-change="changeSort" @on-selection-change="handleSelectChange" ref="table"></Table>
@@ -22,9 +22,9 @@
 </template>
 
 <script>
-import { getProductList, editProduct, deleteProduct } from "../../services/Api"
+import { getArticleList, updateArticle, getArticle, deleteArticle } from "../../services/Api"
 export default {
-  name: 'product',
+  name: 'Article',
   data () {
     return {
       prodList: [],
@@ -61,41 +61,17 @@ export default {
           }
         },
         {
-          title: '图片',
-          key: 'image',
-          render: (h, params) => {
-            return h('img', {
-              attrs: {
-                src: params.row.thumbPic[0]
-              },
-              style: {
-                width: '60px',
-                height: '60px'
-              }
-            })
-          }
-        },
-        {
           title: '分类',
-          key: 'cateId',
+          key: 'cate',
           render: (h, params) => {
-            return h('span', [params.row.cateId && params.row.cateId.name])
+            return h('span', [params.row.cate && params.row.cate.name])
           }
         },
         {
-          title: '销量',
-          key: 'saleNum',
-          sortable: true
-        },
-        {
-          title: '库存',
-          key: 'stock'
-        },
-        {
-          title: '上架',
-          key: 'isSale',
+          title: '公开',
+          key: 'isPublic',
           render: (h, params) => {
-            if (params.row.isSale) {
+            if (params.row.isPublic) {
               return h('div', [
                 h('Button', {
                   props: {
@@ -107,10 +83,10 @@ export default {
                   },
                   on: {
                     click: () => {
-                      this.edit(params.index, 'isSale', 0)
+                      this.updateArticle({id: params.row._id, isPublic: 0})
                     }
                   }
-                }, '下架')
+                }, '私有')
               ])
             } else {
               return h('div', [
@@ -124,10 +100,10 @@ export default {
                   },
                   on: {
                     click: () => {
-                      this.edit(params.index, 'isSale', 1)
+                      this.updateArticle({id: params.row._id, isPublic: 1})
                     }
                   }
-                }, '上架')
+                }, '公开')
               ])
             }
           }
@@ -149,8 +125,7 @@ export default {
                 },
                 on: {
                   click: () => {
-                    console.log(params)
-                    this.$router.push({name: 'product_edit', params: {id: params.row._id}})
+                    this.$router.push({name: 'article_edit', params: {id: params.row._id}})
                   }
                 }
               }, '编辑'),
@@ -161,7 +136,7 @@ export default {
                 },
                 on: {
                   click: () => {
-                    this.deleteProduct(params.index)
+                    this.deleteArticle(params.row._id)
                   }
                 }
               }, '删除')
@@ -172,55 +147,66 @@ export default {
       count: 0,
       getProdConfig: {
         loading: true,
-        pageNum: 1,
+        curtPage: 1,
         pageSize: 2,
         sort: ''
-      },
-      propList: [],
-      cateList: []
+      }
     }
   },
   methods: {
-    addProduct () {
+    addArticle () {
       let rd =  Math.random().toString().substr(2, 10)
-      this.$router.push({name: 'product_edit',query: {r: rd}, params: {id: 'add'}})
+      this.$router.push({name: 'article_edit',query: {r: rd}, params: {id: 'add'}})
     },
-    getProductList () {
-      return getProductList(this.getProdConfig).then((res) => {
+    getArticleList () {
+      return getArticleList(this.getProdConfig).then((res) => {
         this.prodList = res.list
         this.count = res.count
       })
     },
     changePage (page) {
-      this.getProdConfig.pageNum = page
-      this.getProductList()
+      this.getProdConfig.curtPage = page
+      this.getArticleList()
     },
     changeSort ({column, key, order}) {
       console.log(order)
       let mapSort = {asc: '', desc: '-', nomal: ''}
       this.getProdConfig.sort = order !== 'normal' ? mapSort[order] + key : ''
-      this.getProductList()
+      this.getArticleList()
     },
     edit (idx, field, value) {
       const product = this.prodList[idx]
       let data = {}
       data[field] = value
       editProduct(data, product._id).then(res  => {
-        this.getProductList()
+        this.getArticleList()
       })
     },
-    deleteProduct (idx) {
-      let id = this.prodList[idx]._id
-      deleteProduct(id).then(res => {
+    deleteArticle (id) {
+      id = id || this.selectedIds
+      deleteArticle({id}).then(res => {
         this.$Message.success('删除成功!')
-        this.getProductList()
+        this.getArticleList()
       }).catch(err => this.$Message.error('删除失败!'))
     },
     batchAction(actionType, actionField, actionValue) {
       this.$Http.post('/product/batch', {ids: this.selectedIds, actionType, actionField,  actionValue}).then((res)  => {
         this.$Message.success('操作成功！')
-        this.getProductList()
+        this.getArticleList()
         this.handleSelectAll(false)
+      })
+    },
+    /**
+     * [updateArticle description]
+     * @param  {object} data {id: id[] || id, fiedl: value}
+     * @return {Promise}      
+     */
+    updateArticle (data) { 
+      return updateArticle(data).then((res) => {
+        this.$Message.success('编辑成功！')
+        this.getArticleList()
+      }).catch(err => {
+        this.$Message.error('编辑失败！')
       })
     },
     handleSelectAll (status) {
@@ -246,7 +232,7 @@ export default {
     }
   },
   mounted () {
-    this.getProductList()
+    this.getArticleList()
   }
 }
 </script>

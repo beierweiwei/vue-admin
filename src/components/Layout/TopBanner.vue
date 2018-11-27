@@ -54,13 +54,13 @@ export default {
   methods: {
     logout () {
       this.user = null
-      this.help.cookie.set('user', '')
+      this.$help.cookie.set('user', '')
       this.$router.push('/login/login')
     }
   },
   mounted () {
     // 获取用户信息
-    let user = this.help.cookie.get('user')
+    let user = this.$help.cookie.get('user')
     if (!user) {
       this.$router.push('/login/login')
     }else {

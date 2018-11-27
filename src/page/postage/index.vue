@@ -1,6 +1,6 @@
 <template>
   <div class="product-page">
-    <div class="container">运费列表</div>
+    <div class="page-title">运费列表</div>
     <div class="container">
       <!-- <div class="produt-tool">
         <Button @click="isBatch = !isBatch">批量编辑</Button>

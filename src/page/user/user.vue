@@ -1,15 +1,15 @@
 <template>
-  <div class="product-page">
-    <div class="container">用户列表</div>
+  <div class="product-page page">
+    <div class="page-title">用户列表</div>
     <div class="container">
       <div class="produt-tool">
         <Button @click="isBatch = !isBatch">批量编辑</Button>
         <div class="batch-group" v-show="isBatch">
           <Button @click="handleSelectAll(true)">全选</Button>
           <Button @click="handleSelectAll(false)">全不选</Button>
-          <Button type="primary" @click="batchAction('edit',selectedIds, {block: false})">启用</Button>
-          <Button type="warning" @click="batchAction('edit', selectedIds, {block: true})">禁用</Button>
-          <Button type="error" @click="batchAction('delete', selectedIds)">删除</Button>
+          <Button type="primary" @click="updateUser(selectedIds, {block: false})">启用</Button>
+          <Button type="warning" @click="updateUser(selectedIds, {block: true})">禁用</Button>
+          <Button type="error" @click="deleteUser(selectedIds)">删除</Button>
         </div>
       </div>
       <div class="product-list">
@@ -66,11 +66,17 @@ export default {
         },
         {
           title: '生日',
-          key: 'birth'
+          key: 'birth',
+          render(h, param) {
+            return h('span', [new Date(param.row.birth).format('yyyy-MM-dd hh:mm:ss')])
+          }
         },
         {
           title: '注册时间',
-          key: 'ctime'
+          key: 'ctime',
+          render(h, param) {
+            return h('span', [new Date(param.row.ctime).format('yyyy-MM-dd hh:mm:ss')])
+          }
         },
         {
           title: '禁用',
@@ -86,11 +92,7 @@ export default {
                 },
                 on: {
                   click: () => {
-                    self.Api.updateUser(param.row._id, {block: true})
-                    .then(res => {
-                      self.getUserList()
-                      self.$Message.success('更新成功！')
-                    })
+                    self.updateUser(param.row._id, {block: true})
                   }
                 }
               }, '禁用')
@@ -102,11 +104,7 @@ export default {
                 },
                 on: {
                   click: () => {
-                    self.Api.updateUser(param.row._id, {block: false})
-                    .then(res => {
-                      self.getUserList()
-                      self.$Message.success('更新成功！')
-                    })
+                    self.updateUser(param.row._id, {block: false})
                   }
                 }
               }, '启用')
@@ -145,7 +143,7 @@ export default {
                 },
                 on: {
                   click: () => {
-                    this.remove(params.index)
+                    this.deleteUser(params.row._id)
                   }
                 }
               }, '删除')
@@ -216,8 +214,11 @@ export default {
         this.editData.addressList = res
       })
     },
-    updateUser () {
-      this.Api.updateUser(this.editData.userId, this.editData.editor)
+    updateUser (id, data) {
+      id = id || this.editData.userId
+      data = data || this.editData.editor
+      if (Array.isArray(id) && id.length === 0) return
+      return this.Api.updateUser({id, ...data})
         .then(res => {
           this.getUserList()
           this.$Message.success('更新成功！')
@@ -239,10 +240,10 @@ export default {
         tel: addressData.tel,
         detail: addressData.detail,
         areaCode: areaData,
-        userId: this.editData.userId
-
+        userId: this.editData.userId,
       }
       if (id) {
+        data.id = id 
         this.Api.updateAddress(id, data).then(res => {
           this.getAddressList(this.editData.userId)
           this.editData.addressEditor.isShow = false
@@ -264,22 +265,15 @@ export default {
         this.list = res.list
       })
     },
-    batchAction (actionType, ids, modify) {
-      if (!ids) return
-      const isBatch = Array.isArray(ids)
-      //todo
-      switch (actionType) {
-        case 'edit':
-          let updateAct = isBatch ? this.Api.updateUsers : this.Api.updateUser
-          updateAct(ids, modify).then(() => this.$Message.success('编辑成功') && this.initData())
-          .catch(err => this.$Message.err('编辑失败！'))
-          break
-        case 'delete':
-          this.Api.deleteUser(ids).then(() => this.$Message.success('删除成功！') && this.initData())
-            .catch(err => this.$Message.err('删除失败！'))
-          break
-        default:
-      }
+    deleteUser (id) {
+      id = id || this.editData.userId
+      if (Array.isArray(id) && id.length === 0) return
+      this.Api.deleteUser(id).then(res => {
+        this.$Message.success('删除成功！')
+        this.getUserList()
+      }).catch(err => {
+        this.$Message.error('删除失败！')
+      })
     }
   },
   watch: {

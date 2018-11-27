@@ -1,6 +1,6 @@
 <template>
   <div class="product-page">
-    <div class="container">商品列表</div>
+    <div class="page-title">商品列表</div>
     <div class="container">
       <div class="produt-tool">
         <Button @click="isBatch = !isBatch">批量编辑</Button>

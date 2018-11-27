@@ -26,7 +26,7 @@ export default {
   name: 'Login',
   data () {
     return {
-      validateCodeUrl: '/api/login/captcha',
+      validateCodeUrl: '/api/admin/captcha',
       formCustom: {
         username: '',
         password: '',
@@ -57,12 +57,12 @@ export default {
       })
     },
     getValidateCode () {
-      this.validateCodeUrl = '/api/login/captcha?=' + Math.random().toString().substr(2, 10)
+      this.validateCodeUrl = '/api/admin/captcha?' + Date.now()
     },
     postLogin () {
       postLogin(this.formCustom).then((res) => {
         this.$Message.success('登陆成功！')
-        this.help.cookie.set('user', res)
+        this.$help.cookie.set('user', res)
         this.$router.push({name: 'home'})
       }).catch((err) => {
         this.$Message.error('登陆失败！')

@@ -7,7 +7,7 @@
         <div class="batch-group" v-show="isBatch">
           <Button @click="handleSelectAll(true)">全选</Button>
           <Button @click="handleSelectAll(false)">全不选</Button>
-          <Button type="error" @click="batchAction('delete',)">删除</Button>
+          <Button type="error" @click="batchAction('delete')">删除</Button>
         </div>
         <Button class="fr" type="primary" @click="action('add')">增加分类</Button>
       </div>
@@ -27,31 +27,9 @@
             <Input v-model="cateEditor.form.field"/>
           </Col>
         </FormItem>
-        <FormItem label="包含属性" prop="proProps">
-          <Col span="20">
-            <Select v-model="cateEditor.form.props" multiple>
-              <Option v-for="prop in cateEditor.props" :key="prop._id" :value="prop._id">{{prop.name}}</Option>
-            </Select>
-          </Col>
-        </FormItem>
-        <FormItem label="分类级别">
-          <Col span="20">
-            <Select v-model="cateEditor.form.level">
-              <Option v-for="item in 3" :key="item" :value="item">{{item}}</Option>
-            </Select>
-          </Col>
-        </FormItem>
         <FormItem label="排序">
           <Col span="20">
             <Input v-model="cateEditor.form.sort"/>
-          </Col>
-        </FormItem>
-        <FormItem label="父分类">
-          <Col span="20">
-            <Select v-model="cateEditor.form.pid">
-              <Option :value="''">无</Option>
-              <Option v-for="cate in cateEditor.cates" :key="cate._id" :value="cate._id">{{cate.name}}</Option>
-            </Select>
           </Col>
         </FormItem>
       </Form>
@@ -60,9 +38,9 @@
 </template>
 
 <script>
-import {getProductList} from "../../services/Api";
+import { getArticleCateList, deleteArticleCate } from "../../services/Api";
 export default {
-  name: 'ProductCate',
+  name: 'ArticleCate',
   data () {
     return {
       isBatch: false,
@@ -70,7 +48,7 @@ export default {
       columns: [
         {
           title: '分类名',
-          key: 'title',
+          key: 'name',
           // sortable: true,
           render: (h, params) => {
             if (params.row.editable === undefined) this.$set(params.row, 'editable', false)
@@ -101,28 +79,6 @@ export default {
           key: 'sort',
           sortable: 'custom'
         },
-        {
-          title: '包含属性',
-          key: 'props',
-          render: (h, params) => {
-            if (!params.row.props) return
-            let nodes = params.row.props.map(prop => {
-              return h('li', prop.name)
-            })
-            return h('ul', nodes)
-          }
-        },
-        // {
-        //   title: '父级分类',
-        //   key: 'pid',
-        //   render: (h, params) => {
-        //     if (!params.row.pid) return
-        //     const pnodes = params.row.pid.map((pcate) => {
-        //       return h('li', pcate.name)
-        //     })
-        //     return h('ul', pnodes)
-        //   }
-        // },
         {
           title: '操作',
           key: 'action',
@@ -170,7 +126,7 @@ export default {
           props: []
         }
       },
-      listReq: {
+      reqConf: {
         order: {
           key: '',
           value: ''
@@ -181,7 +137,7 @@ export default {
       }
     }
   },
-   methods: {
+  methods: {
     initForm () {
       // this.cateEditor.cates = [{name: '无', _id: ''}]
       this.cateEditor._id = ''
@@ -191,31 +147,24 @@ export default {
       this.cateEditor.form.sort = ''
       this.cateEditor.form.pid = ''
       this.cateEditor.form.level = 1
-
     },
-    getProductCateList (listReq) {
-      return this.Api.getProductCateList(listReq || '').then(res => {
-        this.cateList = res
+    getArticleCateList () {
+      return getArticleCateList(this.reqConf).then(res => {
+        this.cateList = res.list
       })
     },
     submit () {
       let data = this.cateEditor.form
       let id = this.cateEditor._id || 'add'
-      this.Api.postEditCate(data, id).then(res => {
+      this.Api.updateArticleCate({id, ...data}).then(res => {
         this.$Message.success('添加分类成功！')
-        this.getProductCateList()
+        this.getArticleCateList()
       }).catch(err => this.$Message.error(err.errMsg))
     },
-    getProductPropList () {
-      return this.Api.getProductPropList().then(res => {
-        this.cateEditor.props = res
-      })
-    },
-    deleProductCate (ids) {
-      ids = Array.isArray(ids) ? ids : ids.split(',').filter(id => id)
-      this.Api.deleteProductCate({id: ids}).then(ids => {
+    deleteArticleCate (ids) {
+      this.Api.deleteArticleCate({id: ids}).then(ids => {
         this.$Message.success('删除成功！')
-        this.getProductCateList()
+        this.getArticleCateList()
       })
     },
     action (name, curtCate) {
@@ -223,13 +172,11 @@ export default {
       this.cateEditor._id = id
       switch (name) {
         case 'delete':
-          this.deleProductCate(id)
+          this.deleteArticleCate(id)
           break
         case 'edit':
-          this.cateEditor.cates = this.cateList.filter(cate => cate.level < curtCate.level)
-          this.Api.getProductCate(id).then(res => {
+          this.Api.getArticleCate(id).then(res => {
             this.cateEditor.form = res
-            this.cateEditor.form.props = this.cateEditor.props.map((prop => prop._id))
             this.cateEditor.isShow = true
           })
           break
@@ -240,10 +187,24 @@ export default {
         default:
       }
     },
-    batchAction(actionType, actionField, actionValue) {
-      this.$Http.post('/product/cate/batch', {ids: this.selectedIds, actionType, actionField,  actionValue}).then((res)  => {
+    batchAction(actionType, data = {}) {
+      let actionMap = {
+        delete: this.deleteArticleCate.bind(this),
+        update: this.updateArticle.bind(this)
+      }
+      actionMap[actionType](data)
+    },
+    deleteArticleCate () {
+      deleteArticleCate({id: this.selectedIds}).then(res => {
         this.$Message.success('操作成功！')
-        this.getProductCateList()
+        this.getArticleCateList()
+        this.handleSelectAll(false)
+      })
+    },
+    updateArticle (data = {}) {
+      updateArticle({id: this.selectedIds, ...data}).then(res => {
+        this.$Message.success('操作成功！')
+        this.getArticleCateList()
         this.handleSelectAll(false)
       })
     },
@@ -256,10 +217,10 @@ export default {
     changeSort ({key, order}) {
       console.log(key, order)
       let sortVals = ['asc', 'desc', 'nomal']
-      let cfg = this.listReq
+      let cfg = this.reqConf
       if (sortVals.indexOf(order) == 1) key = '-' + key 
       let reqStr = `?sort=${key}&pageSize=${cfg.pageSize}&curtPage=${cfg.curtPage}`
-      this.getProductCateList(reqStr)
+      this.getArticleCateList(reqStr)
     }
   },
   watch: {
@@ -278,8 +239,7 @@ export default {
     }
   },
   mounted () {
-    this.getProductCateList()
-    this.getProductPropList()
+    this.getArticleCateList()
   }
 }
 </script>

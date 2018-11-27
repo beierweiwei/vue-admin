@@ -1,6 +1,6 @@
 <template>
-  <div class="product-page">
-    <div class="container">订单列表</div>
+  <div class="order-page page-main">
+    <div class="page-title">订单列表</div>
     <div class="container">
       <div class="produt-tool">
         <div class="produt-tool">
@@ -58,7 +58,10 @@ export default {
         },
         {
           title: '时间',
-          key: 'ctime'
+          key: 'ctime',
+          render(h, param) {
+            return h('span', [new Date(param.row.ctime).format('yyyy-MM-dd hh:mm')])
+          }
         },
         {
           title: '商品',
