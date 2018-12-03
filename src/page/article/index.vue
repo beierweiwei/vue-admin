@@ -75,7 +75,7 @@ export default {
               return h('div', [
                 h('Button', {
                   props: {
-                    type: 'error',
+                    type: 'warning',
                     size: 'small'
                   },
                   style: {

@@ -100,11 +100,13 @@ export default {
     },
     edit(status) {
       this._editor = this.$help.cloneDeep(this.editor)
-      this.status = status
+      
       if (status === 'add') {
+        this.status = status
         this.editor = this.$help.cloneDeep(editor)
       } else if (status === 'edit') {
-
+        if (!this.editor.roleName) return
+        this.status = status
       }
     },
     cancel() {
@@ -135,12 +137,14 @@ export default {
       }).catch(err => this.$Message.error('新增失败！'))
     },
     updateRole() {
+      if (!this.editor.roleName) return 
       return updateRole(this.editor).then(res => {
         this.$Message.success('编辑成功')
         this.getRoleList()
       }).catch(err => this.$Message.error('编辑失败！'))
     },
     deleteRole() {
+      if (!this.editor.roleName) return
       return deleteRole({ roleName: this.editor.roleName }).then(res => {
         this.$Message.success('删除成功')
         this.getRoleList().then(() => {

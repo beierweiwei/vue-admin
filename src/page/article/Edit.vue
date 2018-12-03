@@ -1,36 +1,34 @@
 <template>
   <div class="edit-page">
     <div class="page-title">新增/编辑文章</div>
-    <div class="container">
-      <Form :model="formItem" :label-width="80">
-        <FormItem label="标题">
-          <Col span="16"><Input type="text" v-model="formItem.title"></Input></Col>
-        </FormItem>
-        <FormItem label="描述">
-          <Col span="16"><Input type="text" v-model="formItem.des"></Input></Col>
-        </FormItem>
-        <FormItem label="分类">
-          <Col span="16">
-          <Select v-model="formItem.cate">
-            <Option v-for="(cate, idx) in cateList" :key="idx" :value="cate._id">{{cate.name}}</Option>
-          </Select>
-          </Col>
-        </FormItem>
-        <FormItem label="是否公开">
-          <RadioGroup v-model="formItem.isPublic">
-            <Radio :label="1">是</Radio>
-            <Radio :label="0">否</Radio>
-          </RadioGroup>
-        </FormItem>
-        <FormItem label="内容">
-          <textarea name="content" id="content" cols="30" rows="10"></textarea>
-        </FormItem>
-        <FormItem>
-          <Button type="primary" @click="submit">Submit</Button>
-          <Button type="ghost" style="margin-left: 8px">Cancel</Button>
-        </FormItem>
-      </Form>
-    </div>
+    <Form :model="formItem" :label-width="80">
+      <FormItem label="标题">
+        <Col span="16"><Input type="text" v-model="formItem.title"></Input></Col>
+      </FormItem>
+      <FormItem label="描述">
+        <Col span="16"><Input type="text" v-model="formItem.des"></Input></Col>
+      </FormItem>
+      <FormItem label="分类">
+        <Col span="16">
+        <Select v-model="formItem.cate">
+          <Option v-for="(cate, idx) in cateList" :key="idx" :value="cate._id">{{cate.name}}</Option>
+        </Select>
+        </Col>
+      </FormItem>
+      <FormItem label="是否公开">
+        <RadioGroup v-model="formItem.isPublic">
+          <Radio :label="1">是</Radio>
+          <Radio :label="0">否</Radio>
+        </RadioGroup>
+      </FormItem>
+      <FormItem label="内容">
+        <textarea name="content" id="content" cols="30" rows="10"></textarea>
+      </FormItem>
+      <FormItem>
+        <Button type="primary" @click="submit">Submit</Button>
+        <Button type="ghost" style="margin-left: 8px">Cancel</Button>
+      </FormItem>
+    </Form>
   </div>
 </template>
 <script>

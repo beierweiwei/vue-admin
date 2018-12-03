@@ -7,8 +7,8 @@
         <div class="batch-group" v-show="isBatch">
           <Button @click="handleSelectAll(true)">全选</Button>
           <Button @click="handleSelectAll(false)">全不选</Button>
-          <Button type="primary" @click="updateAdmin(selectedIds, {block: 1})">启用</Button>
-          <Button type="warning" @click="updateAdmin(selectedIds, {block: 0})">禁用</Button>
+          <Button type="primary" @click="updateAdmin(selectedIds, {block: 0})">启用</Button>
+          <Button type="warning" @click="updateAdmin(selectedIds, {block: 1})">禁用</Button>
           <Button type="error" @click="deleteAdmin(selectedIds)">删除</Button>
         </div>
         <Button class="fr" type="primary" @click="openModal">新增</Button>
@@ -67,7 +67,7 @@ export default {
             if (params.row.block) {
               btnRender = h('Button', {
                 props: {
-                  type: 'warning',
+                  type: 'primary',
                   size: 'small'
                 },
                 on: {
@@ -75,11 +75,11 @@ export default {
                     self.updateAdmin(params.row._id, { block: 0 }).then(res => { if (res) self.list[params.index].block = 0 })
                   }
                 }
-              }, '禁用')
+              }, '启用')
             } else {
               btnRender = h('Button', {
                 props: {
-                  type: 'primary',
+                  type: 'warning',
                   size: 'small'
                 },
                 on: {
@@ -87,7 +87,7 @@ export default {
                     self.updateAdmin(params.row._id, { block: 1 }).then(res => { if (res) self.list[params.index].block = 1 })
                   }
                 }
-              }, '启用')
+              }, '禁用')
             }
             return btnRender
           }

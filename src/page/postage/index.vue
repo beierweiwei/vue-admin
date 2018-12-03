@@ -87,7 +87,7 @@ export default {
               }, '编辑'),
               h('Button', {
                 props: {
-                  type: params.row.status ? 'error' : 'primary',
+                  type: params.row.status ? 'warning' : 'primary',
                   size: 'small'
                 },
                 on: {

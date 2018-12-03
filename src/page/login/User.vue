@@ -33,7 +33,7 @@
   </div>
 </template>
 <script>
-import {postRegister, getUserList} from '@/services/Api'
+import {getUserList} from '@/services/Api'
 import {validate} from '@/util/validate'
 export default {
   name: 'admincenter',
@@ -97,22 +97,22 @@ export default {
         callback()
       }
     },
-    submit () {
-      this.$refs.formCustom.validate((val) => {
-        if (val) {
-          this.$Message.success('正在注册，请稍后！')
-          postRegister(this.formCustom).then((res) => {
+    // submit () {
+    //   this.$refs.formCustom.validate((val) => {
+    //     if (val) {
+    //       this.$Message.success('正在注册，请稍后！')
+    //       postRegister(this.formCustom).then((res) => {
 
-            this.$router.push({name: 'home'})
-          }).catch((err) => {
-            console.log('register error')
-          })
-        } else {
-          this.$Message.error('填写有误，请重新填写表单！')
-        }
-      })
+    //         this.$router.push({name: 'home'})
+    //       }).catch((err) => {
+    //         console.log('register error')
+    //       })
+    //     } else {
+    //       this.$Message.error('填写有误，请重新填写表单！')
+    //     }
+    //   })
 
-    }
+    // }
   },
   mounted () {
 
