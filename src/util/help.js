@@ -1,6 +1,6 @@
 import cookie from 'js-cookie'
 import Date from './Date'
-import { cloneDeep, isNumber, merge}  from 'lodash'
+import { cloneDeep, isNumber, merge, isObject}  from 'lodash'
 export function combine (array) {
   let all = []
   if (!(array && array.length > 0)) return
@@ -23,5 +23,6 @@ export default {
   combine,
   cloneDeep,
   isNumber,
-  merge
+  merge,
+  isObject
 }
