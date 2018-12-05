@@ -8,7 +8,48 @@
         </infor-card>
       </i-col>
     </Row>
-    <Row :gutter="20" style="margin-top: 10px;">
+
+    <Row style="margin-top: 10px;">
+      <Col>
+        <Card shadow title="数据统计">
+          <Row :gutter="8" class="data-count">
+            <Col span="4">商品总数：<span>321323</span> </Col>
+            <Col span="4">商品分类：<span>3</span> </Col>
+            <Col span="4">促销商品：<span>3</span> </Col>
+            <Col span="4">推荐商品：<span>3</span> </Col>
+            <Col span="4">库存预警：<span>3</span> </Col>
+            <Col span="4">促销活动：<span>3</span> </Col>
+          </Row>
+          <Row :gutter="8" class="data-count">
+            <Col span="4">订单总数：<span>3</span> </Col>
+            <Col span="4">交易总额：<span>3</span> </Col>
+            <Col span="4">退款总数：<span>3</span> </Col>
+            <Col span="4">未结订单：<span>3</span> </Col>
+          </Row>
+          <Row :gutter="8" class="data-count">
+            <Col span="4">会员总数：<span>3</span> </Col>
+            <Col span="4">访客总数：<span>3</span> </Col>
+            <Col span="4">冻结会员：<span>3</span> </Col>
+          </Row>
+        </Card> 
+      </Col>
+    </Row>
+
+    <Row style="margin-top: 15px;">
+      <Col>
+        <Card title="流量统计">
+          <Row :gutter="20">
+            <i-col :md="24" :lg="8">
+              <chart-pie style="height: 300px;" :value="pieData" text="用户访问来源"></chart-pie>
+            </i-col>
+            <i-col :md="24" :lg="16" style="margin-bottom: 20px;">
+              <example style="height: 310px;"/>
+            </i-col>
+          </Row>
+        </Card>
+      </Col>
+    </Row>
+<!--     <Row :gutter="20" style="margin-top: 10px;">
       <i-col :md="24" :lg="8" style="margin-bottom: 20px;">
         <Card shadow>
           <chart-pie style="height: 300px;" :value="pieData" text="用户访问来源"></chart-pie>
@@ -23,7 +64,7 @@
     <Row>
       <Card shadow>
         <example style="height: 310px;"/>
-      </Card>
+      </Card> -->
     </Row>
   </div>
 </template>
@@ -45,12 +86,12 @@ export default {
   data () {
     return {
       inforCardData: [
-        { title: '今日成交金额', icon: 'md-person-add', count: 803, color: '#2d8cf0' },
-        { title: '今日订单量', icon: 'md-person-add', count: 803, color: '#2d8cf0' },
-        { title: '今日访客量', icon: 'md-help-circle', count: 142, color: '#ff9900' },
-        { title: '今日成交率', icon: 'md-help-circle', count: 142, color: '#ff9900' },
-        { title: '今日新增用户', icon: 'md-person-chatbubbles', count: 803, color: '#2d8cf0' },
-        { title: '今日新增商品', icon: 'md-map', count: 14, color: '#9A66E4' },
+        { title: '待付款', icon: 'md-person-add', count: 803, color: '#2d8cf0' },
+        { title: '待发货', icon: 'md-person-add', count: 803, color: '#2d8cf0' },
+        { title: '待审核退换货', icon: 'md-help-circle', count: 142, color: '#ff9900' },
+        { title: '新增用户', icon: 'md-help-circle', count: 142, color: '#ff9900' },
+        { title: '今日成交', icon: 'md-person-chatbubbles', count: 803, color: '#2d8cf0' },
+        { title: '今日订单', icon: 'md-map', count: 14, color: '#9A66E4' },
 
       ],
       pieData: [
@@ -80,6 +121,14 @@ export default {
 <style lang="less">
 .count-style{
   font-size: 50px;
+}
+.data-count {
+  // border-bottom: 1px solid #ddd;
+  line-height: 2;
+  margin-bottom: 10px;
+  span {
+    margin-left: 20px;
+  }
 }
 </style>
 

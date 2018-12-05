@@ -1,8 +1,8 @@
 <template>
   <div class="login-page">
-    <h3 class="site-title">
-      简易商城系统123
-    </h3>
+    <h1 class="site-title">
+      MY SHOP
+    </h1>
     <Form ref="formCustom" :model="formCustom" :rules="ruleCustom" :label-width="80">
       <FormItem label="用户名" prop="username">
         <Input type="text" v-model="formCustom.username" autofocus/>
@@ -86,8 +86,11 @@ export default {
 <style lang="less">
 .login-page {
   position: absolute;
-  width: 100%;
-  height: 100%;
+  width: 400px;
+  height: 400px;
+  top: 100px;
+  left: 50%;
+  margin-left: -200px;
   .captcha-box {
     img {
       // width: 25px;
@@ -111,12 +114,7 @@ export default {
     }
   }
   .site-title {
-    position: absolute;
-    top: 10%;
-    right: 20px;
-    font-size: 22px;
-    width: 300px;
-    text-align: left;
+   text-align: center;
 
   }
 }
