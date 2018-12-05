@@ -69,7 +69,6 @@ export default {
   watch: {
     $route (val) {
       if (!this.pages) return 
-      
       let curtPageIdx = this.pages.findIndex((page) => page.name === val.name)
         
       if (!~curtPageIdx) {
@@ -81,7 +80,6 @@ export default {
       }
     },
     curtPageIdx (val) {
-      // todo 增加商品页面和此处有冲突，新打开商品页面，保留的是add的route，到编辑的时候编辑的参数会传步过去，考虑更改跳转模式
       if (val !== undefined && this.pages[val]) {
         let route = this.pages[val]
         let routeObj = {name: route.name, query: route.query, params: route.params}

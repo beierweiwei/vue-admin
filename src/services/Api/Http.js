@@ -11,7 +11,7 @@ export const HandleResponse = (res) => {
   } else {
     switch (res.data.code) {
       case 201:
-        // VueRouter.push('/login')
+        window.$VUE_ADMIN.$router.push({name: 'login'})
         break
     }
     return handleError(res.data)

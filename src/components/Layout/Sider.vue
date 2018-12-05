@@ -2,13 +2,13 @@
   <div class="layout-siderbar">
       <div class="layout-logo">my-shop</div>
       <Menu theme="dark" width="auto"  @on-select="go" :active-name="curtPage && curtPage.name">
-        <template v-for="page in pagesMap">
+        <template v-for="page in pagesOfHasPermit">
           <Submenu  v-if="page.child" :name="page.field">
             <template slot="title">
               <Icon type="ios-paper"></Icon>
               {{page.name}}
             </template>
-              <MenuItem v-for="subPage in pagesMap"
+              <MenuItem v-for="subPage in pagesOfHasPermit"
                         v-if="subPage.pid === page.id"
                         :key="subPage.field"
                         :name="subPage.field">
@@ -41,6 +41,20 @@ export default {
   data () {
     return {
       pagesMap
+    }
+  },
+  computed: {
+    pagesOfHasPermit () {
+      let routes = []
+      this.$router.options.routes.forEach(route => {
+        routes.push(route.name)
+        if (route.children) {
+          route.children.forEach(childRoute => routes.push(childRoute.name))
+        } 
+      })
+      return this.pagesMap.filter(page => {
+        return !!~routes.indexOf(page.field)
+      })
     }
   },
   methods: {

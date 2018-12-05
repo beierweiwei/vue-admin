@@ -21,7 +21,9 @@
   </div>
 </template>
 <script>
-import {postLogin} from '@/services/Api'
+import Vue from 'vue'
+import { postLogin } from '@/services/Api'
+import { dynmicCreateRoutes, hasPermssion } from '@/common/Fn' 
 export default {
   name: 'Login',
   data () {
@@ -43,7 +45,8 @@ export default {
         validateCode: [
           {required: true, message: '请输入验证码', trigger: 'blur'}
         ]
-      }
+      },
+      permission: {}
     }
   },
   methods: {
@@ -62,12 +65,20 @@ export default {
     postLogin () {
       postLogin(this.formCustom).then((res) => {
         this.$Message.success('登陆成功！')
-        this.$help.cookie.set('user', res)
-        this.$router.push({name: 'home'})
-      }).catch((err) => {
-        this.$Message.error('登陆失败！')
-        this.getValidateCode()
+        this.reInitApp(res)
+      }).catch(err => {
+        console.log(err)
+        // this.$Message.error('登录失败！')
       })
+    },
+    reInitApp (user) {
+      this.$help.cookie.set('user', user)
+      Vue.prototype.$hasPermssion = hasPermssion(user.permission)
+      this.addRoutes()
+      this.$router.push({name: 'home'})
+    },
+    addRoutes () {
+      this.$router.addRoutes(dynmicCreateRoutes())
     }
   }
 }

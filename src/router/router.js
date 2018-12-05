@@ -1,4 +1,3 @@
-
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/page/home/index'
@@ -59,7 +58,8 @@ const errorRoutes = [{
 export const appRoutes = [{
     path: '/',
     redirect: '/home/index',
-    title: '首页'
+    title: '首页',
+    name: 'home',
   },
   {
     path: '/home',
@@ -70,7 +70,9 @@ export const appRoutes = [{
       path: 'index',
       component: Home,
       name: 'home_index',
-      title: '首页'
+      meta: {
+        title: '首页'
+      }
     }]
   },
   {
@@ -85,7 +87,6 @@ export const appRoutes = [{
         title: '订单管理'
       }
     }]
-
   },
   {
     path: '/postage',
@@ -264,10 +265,14 @@ export const appRoutes = [{
     ]
   }
 ]
-let allRouters = [
-  ...appRoutes,
+
+export const baseRouter = [
   ...loginRoute,
   ...errorRoutes
 ]
+export default  [
+  ...appRoutes,
+  ...baseRouter
+]
 
-export default allRouters
+
