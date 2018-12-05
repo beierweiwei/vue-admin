@@ -23,7 +23,7 @@
 <script>
 import Vue from 'vue'
 import { postLogin } from '@/services/Api'
-import { dynmicCreateRoutes, hasPermssion } from '@/common/Fn' 
+import { dynmicCreateRoutes, hasPermission } from '@/common/Fn' 
 export default {
   name: 'Login',
   data () {
@@ -73,7 +73,7 @@ export default {
     },
     reInitApp (user) {
       this.$help.cookie.set('user', user)
-      Vue.prototype.$hasPermssion = hasPermssion(user.permission)
+      Vue.prototype.$hasPermission = hasPermission(user.permission)
       this.addRoutes()
       this.$router.push({name: 'home'})
     },

@@ -51,7 +51,6 @@ export default {
       let containerWidth = this.$refs.container.offsetWidth
       let isOverflow = ListWidth - containerWidth > 0
       this.containerStyle = isOverflow ? 'overflow' : 'no-overflow'
-      console.log('xxxxxxxxxxxxxxx')
     },
     scrollLabelContainer (direction) {
       let container = this.$refs.container

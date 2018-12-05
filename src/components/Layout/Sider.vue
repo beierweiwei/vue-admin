@@ -46,7 +46,8 @@ export default {
   computed: {
     pagesOfHasPermit () {
       let routes = []
-      this.$router.options.routes.forEach(route => {
+      let allowedRouters = this.$allowedRoutes
+      allowedRouters.forEach(route => {
         routes.push(route.name)
         if (route.children) {
           route.children.forEach(childRoute => routes.push(childRoute.name))

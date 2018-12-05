@@ -3,7 +3,7 @@
 import Vue from 'vue'
 import App from './App'
 import vueRouter from 'vue-router'
-import { baseRouter } from './router/router'
+import { baseRoutes, appRoutes } from './router/router'
 import Iview from 'iview'
 import 'iview/dist/styles/iview.css'
 import './assets/style/main.less'
@@ -11,7 +11,7 @@ import VueComponents from './components/common'
 import * as Api from '@/services/Api'
 import Http from '@/services/Api/Http'
 import help from '@/util/help'
-import { dynmicCreateRoutes, hasPermssion} from '@/common/Fn'
+import { dynmicCreateRoutes, hasPermission} from '@/common/Fn'
 
 Vue.use(Iview)
 
@@ -32,7 +32,7 @@ function initApp () {
   Vue.use(vueRouter)
   let router = new vueRouter ({
     mode: 'history',
-    routes: baseRouter
+    routes: baseRoutes
   })
   window.$VUE_ADMIN = new Vue({
     el: '#app',
@@ -46,16 +46,18 @@ function initApp () {
 function getAdminInfo() {
   Http.post('/admin/info')
   .then(res => {
-    console.log('xxxx')
-    Vue.prototype.$hasPermssion = hasPermssion(res.permission)
-    console.log(dynmicCreateRoutes())
-    initApp(dynmicCreateRoutes())
+    Vue.prototype.$hasPermission = hasPermission(res.permission)
+    // 生成动态路由一定要在给vue原型绑定hasPermission后
+    console.log(appRoutes)
+    let allowedRoutes = res.level < 2 ? appRoutes : dynmicCreateRoutes()
+    Vue.prototype.$allowedRoutes = allowedRoutes
+    window.$VUE_ADMIN.$router.addRoutes(allowedRoutes)
   })
-  // .catch(err => {
-  //   console.log('net error')
-  //   Vue.prototype.$hasPermssion = hasPermssion({})
-  //   initApp(dynmicCreateRoutes())
-  //   window.$VUE_ADMIN.$router.push({name: 'login'})
-  // })
+  .catch(err => {
+    console.log('net error')
+    Vue.prototype.$hasPermission = hasPermission({})
+    initApp(dynmicCreateRoutes())
+    window.$VUE_ADMIN.$router.push({name: 'login'})
+  })
 
 }

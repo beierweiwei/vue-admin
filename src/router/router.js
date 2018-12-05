@@ -24,7 +24,6 @@ import ArticleEdit from '@/page/article/Edit'
 import Permission from '@/page/permission/Permission'
 import PermissionEdit from '@/page/permission/edit'
 import Role from '@/page/permission/Role'
-
 const loginRoute = [{
     path: '/login/login',
     name: 'login',
@@ -59,7 +58,7 @@ export const appRoutes = [{
     path: '/',
     redirect: '/home/index',
     title: '首页',
-    name: 'home',
+    name: 'index'
   },
   {
     path: '/home',
@@ -266,13 +265,13 @@ export const appRoutes = [{
   }
 ]
 
-export const baseRouter = [
+export const baseRoutes = [
   ...loginRoute,
   ...errorRoutes
 ]
-export default  [
+export const routes =  [
   ...appRoutes,
-  ...baseRouter
+  ...baseRoutes
 ]
 
 
