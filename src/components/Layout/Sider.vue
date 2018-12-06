@@ -1,7 +1,7 @@
 <template>
   <div class="layout-siderbar">
       <div class="layout-logo">my-shop</div>
-      <Menu theme="dark" width="auto"  @on-select="go" :active-name="curtPage && curtPage.name">
+      <Menu theme="dark" :width="width"  @on-select="go" :active-name="curtPage && curtPage.name">
         <template v-for="page in pagesOfHasPermit">
           <Submenu  v-if="page.child" :name="page.field">
             <template slot="title">
@@ -36,7 +36,10 @@ export default {
   //   }
   // },
   props: {
-    curtPage: {}
+    curtPage: {},
+    width: {
+      default: 'auto'
+    }
   },
   data () {
     return {

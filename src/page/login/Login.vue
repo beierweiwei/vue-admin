@@ -23,7 +23,8 @@
 <script>
 import Vue from 'vue'
 import { postLogin } from '@/services/Api'
-import { dynmicCreateRoutes, hasPermission } from '@/common/Fn' 
+import { dynmicCreateRoutes, hasPermission } from '@/common/Fn'
+import help from '@/util/help'
 export default {
   name: 'Login',
   data () {
@@ -65,14 +66,16 @@ export default {
     postLogin () {
       postLogin(this.formCustom).then((res) => {
         this.$Message.success('登陆成功！')
-        this.reInitApp(res)
+        this.$help.cookie.set('user', res)
+        // this.reInitApp(res)
+        location.href = '/'
       }).catch(err => {
         console.log(err)
         // this.$Message.error('登录失败！')
       })
     },
     reInitApp (user) {
-      this.$help.cookie.set('user', user)
+      
       Vue.prototype.$hasPermission = hasPermission(user.permission)
       this.addRoutes()
       this.$router.push({name: 'home'})

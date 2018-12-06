@@ -41,12 +41,13 @@ const loginRoute = [{
     component: AdminCenter
   }
 ]
-const errorRoutes = [{
-    path: '*',
-    name: '404',
-    component: Page404,
-    title: '错误页'
-  },
+const errorRoutes = [
+// {
+//     path: '*',
+//     name: '404',
+//     component: Page404,
+//     title: '错误页'
+//   },
   {
     path: '/500',
     name: '500',

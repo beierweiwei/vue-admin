@@ -1,7 +1,7 @@
 <template>
   <div id="main">
     <Layout style="height: 100%;">
-      <Sider hide-trigger v-model="isShow"  collapsible :collapsed-width="40" width="160">
+      <Sider hide-trigger v-model="isShow"  collapsible :collapsed-width="40" width="165">
         <SiderCop @check-menu="checkMenu"  :curtPage="curtPage"></SiderCop>
       </Sider>
       <Layout class="page">

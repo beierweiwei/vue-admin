@@ -28,7 +28,7 @@ getAdminInfo()
 
 /* eslint-disable no-new */
 
-function initApp () {
+function initApp (routes) {
   Vue.use(vueRouter)
   let router = new vueRouter ({
     mode: 'history',
@@ -56,7 +56,7 @@ function getAdminInfo() {
   .catch(err => {
     console.log('net error')
     Vue.prototype.$hasPermission = hasPermission({})
-    initApp(dynmicCreateRoutes())
+    // initApp(dynmicCreateRoutes())
     window.$VUE_ADMIN.$router.push({name: 'login'})
   })
 

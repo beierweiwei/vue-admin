@@ -61,11 +61,12 @@ export default {
   mounted () {
     // 获取用户信息
     let user = this.$help.cookie.get('user')
-    if (!user) {
-      this.$router.push('/login/login')
-    }else {
-      this.user = JSON.parse(user)
-    }
+    this.user = JSON.parse(user)
+    // if (!user) {
+    //   this.$router.push('/login/login')
+    // }else {
+    //   this.user = JSON.parse(user)
+    // }
   }
 }
 </script>
