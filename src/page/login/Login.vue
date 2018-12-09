@@ -1,23 +1,22 @@
 <template>
   <div class="login-page">
-    <h1 class="site-title">
-      MY SHOP
-    </h1>
-    <Form ref="formCustom" :model="formCustom" :rules="ruleCustom" :label-width="80">
-      <FormItem label="用户名" prop="username">
-        <Input type="text" v-model="formCustom.username" autofocus/>
-      </FormItem>
-      <FormItem label="密码" prop="password">
-        <Input type="password" v-model="formCustom.password"/>
-      </FormItem>
-      <FormItem label="验证码" prop="validateCode">
-        <Input type="text" v-model="formCustom.validateCode" style="width:100px"/>
-        <span class="captcha-box" @click="getValidateCode"><img    :src="validateCodeUrl"/></span>
-      </FormItem>
-      <FormItem>
-        <Button type="primary" size="small" style="margin-top: -15px;" @click="handleSubmit('formCustom')">登陆</Button>
-      </FormItem>
-    </Form>
+    <Card class="login-box" title="MY SHOP">
+      <Form ref="formCustom" :model="formCustom" :rules="ruleCustom" :label-width="80">
+        <FormItem label="用户名" prop="username">
+          <Input type="text" v-model="formCustom.username" autofocus/>
+        </FormItem>
+        <FormItem label="密码" prop="password">
+          <Input type="password" v-model="formCustom.password"/>
+        </FormItem>
+        <FormItem label="验证码" prop="validateCode">
+          <Input type="text" v-model="formCustom.validateCode" style="width:100px"/>
+          <span class="captcha-box" @click="getValidateCode"><img    :src="validateCodeUrl"/></span>
+        </FormItem>
+        <FormItem>
+          <Button type="primary" @click="handleSubmit('formCustom')">登陆</Button>
+        </FormItem>
+      </Form>
+    </Card>
   </div>
 </template>
 <script>
@@ -70,8 +69,8 @@ export default {
         // this.reInitApp(res)
         location.href = '/'
       }).catch(err => {
-        console.log(err)
-        // this.$Message.error('登录失败！')
+        this.$Message.error(err.errMsg)
+        this.getValidateCode()
       })
     },
     reInitApp (user) {
@@ -88,12 +87,13 @@ export default {
 </script>
 <style lang="less">
 .login-page {
-  position: absolute;
-  width: 400px;
-  height: 400px;
-  top: 100px;
-  left: 50%;
-  margin-left: -200px;
+  padding-top: 10px;
+  background: #3498DB;
+  height: 100%;
+  .login-box {
+    width: 320px;
+    margin: 100px auto 0;
+  }
   .captcha-box {
     img {
       // width: 25px;
@@ -102,11 +102,6 @@ export default {
     }
   }
   form {
-    width: 350px;
-    position: absolute;
-    right: 20px;
-    top: 20%;
-    padding: 25px 20px 10px 15px;
     /*border: 1px solid #ccc;*/
     border-radius: 5px;
     background: rgba(255, 255, 255, .2);

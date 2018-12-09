@@ -5,19 +5,46 @@
 <script>
 import echarts from 'echarts'
 import { on, off } from '@/libs/tools'
+import { getOrderStatistics } from '@/services/Api'
 export default {
   name: 'serviceRequests',
   data () {
     return {
-      dom: null
+      dom: null,
+      dayOrderMap: {}
     }
   },
   methods: {
     resize () {
       this.dom.resize()
+    },
+    getOrderNumEveryDay (startTime = Date.now(), endTime = Date.now()) {
+
+      return getOrderStatistics({startTime, endTime}).then(res => {
+        if (res && typeof res === 'object') {
+          this.dayOrderMap = { ...this.dayOrderMap, ...res}
+          return true
+        }
+      }).catch(err => {
+        this.$Message.error('获取七天订单信息失败！')
+      })
+    },
+    initData () {
+      let now = Date.now()
+      let today = now - 8 * 3600000 - now % 24 * 3600000
+      for (let i = 0; i < 7; i ++) {
+        this.dayOrderMap[today - 24 * 3600000 * i] = 0 
+      }
+
+      // Object.keys(this.dayOrderMap).forEach(daytime => {
+      //   console.log(daytime)
+      //   let time = new Date(Number(daytime)).format('yyyy-MM-dd')
+      //   console.log(time)
+      // }) 
     }
   },
   mounted () {
+    this.initData()
     const option = {
       title: {
         text: '七日订单量'
@@ -42,9 +69,8 @@ export default {
         {
           type: 'category',
           boundaryGap: false,
-          data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
-        }
-      ],
+          data: Object.keys(this.dayOrderMap).map(time => {return new Date(Number(time)).format('MM-dd')})
+        }],
       yAxis: [
         {
           type: 'value'
@@ -106,8 +132,14 @@ export default {
     }
     this.$nextTick(() => {
       this.dom = echarts.init(this.$refs.dom)
-      this.dom.setOption(option)
-      on(window, 'resize', this.resize)
+      this.getOrderNumEveryDay().then(res => {
+        if (res) {
+          option.series[0].data = Object.values(this.dayOrderMap)
+          this.dom.setOption(option)
+          on(window, 'resize', this.resize)
+        }
+      })
+      
     })
   },
   beforeDestroy () {

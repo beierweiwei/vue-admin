@@ -211,3 +211,15 @@ export function updateRole (data) {
 export function deleteRole (data) {
   return Http.post('/permission/delete', data)
 }
+
+export function getTodayStatistics () {
+  return Http.get('/statistics/today')
+}
+
+export function getAllStatistics () {
+  return Http.get('/statistics/all')
+}
+
+export function getOrderStatistics ({startTime, endTime}) {
+  return Http.get('/statistics/order', {params: {startTime, endTime}})
+}
