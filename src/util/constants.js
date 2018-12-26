@@ -38,6 +38,25 @@ export const pagesMap = [{
   },
   {
     pid: 0,
+    name: '活动管理',
+    id: 5,
+    field: 'activity',
+    child: true
+  },
+  {
+    pid: 5,
+    name: '活动列表',
+    id: 501,
+    field: 'activity_index'
+  },
+  {
+    pid: 5,
+    name: '优惠券列表',
+    id: 502,
+    field: 'activity_coupon',
+  },
+  {
+    pid: 0,
     name: '订单管理',
     id: 6,
     field: 'order_index',
@@ -50,6 +69,7 @@ export const pagesMap = [{
     field: 'postage_index',
     child: false
   },
+ 
   // {
   //   pid: 3,
   //   name: '库存管理',
@@ -126,7 +146,8 @@ export const pagesMap = [{
     id: 1902,
     field: 'permission_role',
     child: false
-  }
+  },
+
   // tabel: '表格',
   // editalbeTabel: '可编辑表格',
   // searchableTabel: '可搜索表格',

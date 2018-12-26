@@ -74,6 +74,9 @@ export function getProduct (id) {
   return Http.get('/product/' + id )
 }
 
+export function searchProduct (query) {
+  return Http.get('/product/search', {params: query})
+}
 export function getProductList ({pageNum=1, pageSize=10, sort=""} =  {}) {
   return Http.get('/product/list', {params: {pageNum, pageSize, sort}})
 }
@@ -222,4 +225,44 @@ export function getAllStatistics () {
 
 export function getOrderStatistics ({startTime, endTime}) {
   return Http.get('/statistics/order', {params: {startTime, endTime}})
+}
+
+export function getActivityList (query) {
+  return Http.get('/activity', {params: query})
+}
+
+export function getActivity (id) {
+  return Http.get('/activity/' + id)
+}
+
+export function updateActivity (data) {
+  return Http.post('/activity/update', data)
+}
+
+export function deleteActivity (data) {
+  return Http.post('/activity/delete', data)
+}
+
+export function createActivity (data) {
+  return Http.post('/activity', data)
+}
+
+export function getCouponList (query) {
+  return Http.post('/activity/coupon', query)
+}
+
+export function getCoupon (id) {
+  return Http.get('/activity/coupon/' + id)
+}
+
+export function updateCoupon (data) {
+  return Http.post('/activity/coupon/update', data)
+}
+
+export function deleteCoupon (data) {
+  return Http.post('/activity/coupon/delete', data)
+}
+
+export function createCoupon (data) {
+  return Http.post('/activity/coupon/delete', data)
 }

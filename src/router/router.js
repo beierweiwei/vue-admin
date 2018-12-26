@@ -24,6 +24,8 @@ import ArticleEdit from '@/page/article/Edit'
 import Permission from '@/page/permission/Permission'
 import PermissionEdit from '@/page/permission/edit'
 import Role from '@/page/permission/Role'
+import Activity from '@/page/activity/index'
+import Coupon from '@/page/activity/coupon'
 const loginRoute = [{
     path: '/login/login',
     name: 'login',
@@ -260,6 +262,30 @@ export const appRoutes = [{
         meta: {
           title: '角色编辑',
           ptitle: '权限管理'
+        }
+      }
+    ]
+  },
+  {
+    path: '/activity',
+    name: 'activity',
+    component: Main,
+    children: [{
+        path: 'index',
+        component: Activity,
+        name: 'activity_index',
+        meta: {
+          title: '活动列表',
+          ptitle: '活动管理'
+        }
+      },
+      {
+        path: 'coupon',
+        component: Coupon,
+        name: 'activity_coupon',
+        meta: {
+          title: '优惠券列表',
+          ptitle: '活动管理'
         }
       }
     ]
