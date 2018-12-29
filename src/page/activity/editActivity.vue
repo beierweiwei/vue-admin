@@ -62,7 +62,7 @@
 					<div style="max-height: 300px; overflow-y: scroll; ">
 						<productSelector
 							:list="activityProds" 
-							@on-select-change="handleSelect"
+							@on-selection-change="handleSelect"
 						>
 						<!-- <Col span="8"><Button type="warning"	>取消选择</Button></Col>
 						<Col span="8"><Input style=""></Input></Col>
@@ -106,7 +106,7 @@
 </template>
 
 <script>
-	import { getProductList, searchProduct, getProductCateList, getActivity, updateActivity } from '@/services/Api/'
+	import { getProductList, searchProduct, getProductCateList, getActivity, updateActivity, createActivity } from '@/services/Api/'
 	import { upload } from '@/mixin'
 	import productSelector from './productSelector'
 	export default {
@@ -159,16 +159,19 @@
 				this.handleFind()
 			},
 			handleSelect (selection) {
-				this.editor.form.products = selection.map(prod => prod._id)
+				console.log(selection)
+				this.form.products = selection
+
 			},
 			handleSelectReduce (selection) {
-				let selected = this.productListEditor.selected
-				this.productListEditor.selected = selection.filter(prod => !~selected.indexOf(prod._id)).concat(selected)
+				let selectedIds = this.productListEditor.selected.map(prod => prod._id)
+				this.productListEditor.selected = selection.filter(prod => !~selectedIds.indexOf(prod._id)).concat(this.productListEditor.selected)
 			},
 			submit () {
 				let form = {...this.form}
 				form.thumb = this.uploadList[0] && this.uploadList[0].url
 				form.products = this.form.products.map(prod => prod._id)
+				// if (form.products && !form.products.length) form.products = '\[\]'
 				if (form._id) {
 					form.id = form._id
 					updateActivity(form).then(res => {
@@ -178,7 +181,7 @@
 						this.$Message.error('编辑失败！')
 					})
 				} else {
-					createActivity(this.form).then(res => {
+					createActivity(form).then(res => {
 						this.$emit('on-ok')
 						this.$Message.success('新增成功！')
 					}).catch(err => this.$Message.error('新增失败！'))
@@ -243,7 +246,8 @@
 			},
 			submitSelect () {
 				this.productListEditor.isShow = false
-				this.editor.form.products = this.activityProds.concat(this.productListEditor.selected).map(prod => {
+				let productIds = this.editor.form.products.map(prod => prod._id)
+				this.editor.form.products = this.activityProds.concat(this.productListEditor.selected.filter(prod => !~productIds.indexOf(prod._id))).map(prod => {
 					prod._checked = true 
 					return prod
 				})
