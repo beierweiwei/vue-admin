@@ -71,6 +71,13 @@
 					</productSelector>
 				</div>
 				</FormItem>
+				<FormItem label="活动优惠券:">
+					<Select v-model="form.coupons" multiple>
+						<Option v-for="coupon in couponList" :value="coupon._id" :key="coupon._id">
+							{{coupon.title}}:满{{coupon.full}}减{{coupon.reduce}}
+						</Option>
+					</Select>
+				</FormItem>
 				<FormItem label="活动状态:">
 					<Select v-model="form.status">
 						<Option :value="1">上线</Option>
@@ -106,7 +113,7 @@
 </template>
 
 <script>
-	import { getProductList, searchProduct, getProductCateList, getActivity, updateActivity, createActivity } from '@/services/Api/'
+	import { getProductList, searchProduct, getProductCateList, getActivity, updateActivity, createActivity, getCouponList} from '@/services/Api/'
 	import { upload } from '@/mixin'
 	import productSelector from './productSelector'
 	export default {
@@ -115,7 +122,8 @@
 			editor: {
 				default: {
 					form: {
-						products: []
+						products: [],
+						coupons: []
 					}
 				}
 			}
@@ -127,6 +135,7 @@
 			return {
 				uploadList: [],
 				defaultList: [],
+				couponList: [],
 				productListEditor: {
 					isShow: false,
 					search: {
@@ -252,6 +261,11 @@
 					return prod
 				})
 				// updateActivity({products: this.productListEditor.selected, id: this.form._id})
+			},
+			getCouponList () {
+				return getCouponList({status: 1, pageSize: 10000, type: 2}).then(res => {
+						this.couponList = res.list || []
+				})
 			}
 		},
 		mounted () {
@@ -262,6 +276,7 @@
 			}]
 			
 			this.uploadList = this.$refs.upload.fileList 
+			this.getCouponList()
 
 		}
 	}

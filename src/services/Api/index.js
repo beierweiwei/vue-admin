@@ -248,7 +248,7 @@ export function createActivity (data) {
 }
 
 export function getCouponList (query) {
-  return Http.post('/activity/coupon', query)
+  return Http.get('/activity/coupon', {params: query})
 }
 
 export function getCoupon (id) {
@@ -264,5 +264,5 @@ export function deleteCoupon (data) {
 }
 
 export function createCoupon (data) {
-  return Http.post('/activity/coupon/delete', data)
+  return Http.post('/activity/coupon', data)
 }

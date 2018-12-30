@@ -1,37 +1,42 @@
 <template>
-  <div class="Activity-page">
-    <div class="page-title">活动列表</div>
+  <div class="coupon-page">
+    <div class="page-title">优惠券列表</div>
     <div class="container">
       <div class="produt-tool">
         <Button @click="isBatch = !isBatch">批量编辑</Button>
         <div class="batch-group" v-show="isBatch">
           <Button @click="handleSelectAll(true)">全选</Button>
           <Button @click="handleSelectAll(false)">全不选</Button>
-          <Button type="primary" @click="updateActivity({id: selectedIds, status: 1})">上线</Button>
-          <Button type="warning" @click="updateActivity({id: selectedIds, status: 0})">下线</Button>
-          <Button type="error" @click="deleteActivity(selectedIds)">删除</Button>
+          <Button type="primary" @click="updateCoupon({id: selectedIds, status: 1})">上线</Button>
+          <Button type="warning" @click="updateCoupon({id: selectedIds, status: 0})">下线</Button>
+          <Button type="error" @click="deleteCoupon(selectedIds)">删除</Button>
         </div>
-        <Button class="fr" type="primary" @click="addActivity" >增加活动</Button>
+        <Button class="fr" type="primary" @click="addCoupon" >增加优惠券</Button>
       </div>
       <div class="product-list">
-        <Table border :columns="columns" :data="activityList" @on-sort-change="changeSort" @on-selection-change="handleSelectChange" ref="table"></Table>
+        <Table border :columns="columns" :data="couponList" @on-sort-change="changeSort" @on-selection-change="handleSelectChange" ref="table"></Table>
         <Page style="margin-top: 10px" :total="count" :page-size="requestConfig.pageSize" @on-change="changePage" show-total></Page>
       </div>
     </div>
-    <Editor :editor="editor" @on-ok="getActivityList"/>
+    <Editor :editor="editor" @on-ok="getCouponList"/>
   </div>
 </template>
 
 <script>
-import { getActivityList, updateActivity, getActivity, deleteActivity } from "../../services/Api"
-import Editor from './editActivity'
+import { getCouponList, updateCoupon, getCoupon, deleteCoupon } from "@/services/Api"
+import Editor from './editor'
 import help  from '@/util/help'
+const statusMap = {
+  '0': '未开始',
+  '1': '可使用',
+  '2': '已过期'
+}
 export default {
-  name: 'Activity',
+  name: 'coupon',
   components: { Editor },
   data () {
     return {
-      activityList: [],
+      couponList: [],
       isBatch: false,
       selectedIds: [],
       columns: [
@@ -40,34 +45,34 @@ export default {
           key: '_id',
         },
         {
-          title: '广告图',
+          title: '标题',
+          key: 'title'
+        },
+        {
+          title: '规则',
           key: 'thumb',
           render (h, params) {
-            return h('img', {
-              attrs: {
-                src: params.row.thumb
-              },
-              style: {
-                width: '60px',
-                height: '60px'
-              }
-            })
+            return h('span', {
+    
+            },
+            [
+              '满', params.row.full, '减', params.row.reduce  
+            ])
           }
         },
         {
-          title: '标题',
-          key: 'title',
+          title: '总数',
+          key: 'total',
         },
         {
-          title: '内容',
-          key: 'desc'
-        },
-        {
-          title: '满减',
-          key: 'reduce',
-          render: (h, params) => {
-            let rule = params.row.rule || {}
-            return h('div', ['满',rule.full,'减', rule.reduce])
+          title: '有效时间',
+          key: 'time',
+          render (h, params) {
+            return h('span', [
+              new Date(params.row.startTime).format('yyyy-MM-dd hh:mm:ss'),
+              '--',
+              new Date(params.row.endTime).format('yyyy-MM-dd hh:mm:ss')
+            ])
           }
         },
         {
@@ -96,9 +101,13 @@ export default {
           title: '时间',
           key: 'time',
           render: (h, params) => {
-            let {startTime, endTime} = params.row 
+            const {startTime, endTime} = params.row 
             return h('div', [new Date(startTime).format('yyyy-MM-dd hh:mm'), '--', new Date(endTime).format('yyyy-MM-dd hh:mm')])
           }
+        },
+        {
+          title: '限领',
+          key: 'perMax'
         },
         {
           title: 'Action',
@@ -128,7 +137,7 @@ export default {
                 },
                 on: {
                   click: () => {
-                    this.deleteActivity(params.row._id)
+                    this.deleteCoupon(params.row._id)
                   }
                 }
               }, '删除')
@@ -144,8 +153,7 @@ export default {
           rule: {
 
           },
-          products: [],
-          coupons: []
+          products: []
         }
       },
       requestConfig: {
@@ -157,42 +165,43 @@ export default {
     }
   },
   methods: {
-    addActivity () {
+    addCoupon () {
       this.initEditorForm()
       this.editor.isShow = true
     },
-    getActivityList () {
-      return getActivityList(this.requestConfig).then((res) => {
-        this.activityList = res.list
+    getCouponList () {
+      return getCouponList(this.requestConfig).then((res) => {
+        this.couponList = res.list
         this.count = res.count
       })
     },
     changePage (page) {
       this.requestConfig.curtPage = page
-      this.getActivityList()
+      this.getCouponList()
     },
     changeSort ({column, key, order}) {
       console.log(order)
       let mapSort = {asc: '', desc: '-', nomal: ''}
       this.requestConfig.sort = order !== 'normal' ? mapSort[order] + key : ''
-      this.getActivityList()
+      this.getCouponList()
     },
-    deleteActivity (id) {
+    deleteCoupon (id) {
       id = id || this.selectedIds
-      deleteActivity({id}).then(res => {
+      deleteCoupon({id}).then(res => {
         this.$Message.success('删除成功!')
-        this.getActivityList()
+        this.getCouponList()
       }).catch(err => this.$Message.error('删除失败!'))
     },
     /**
-     * [updateActivity description]
+     * [updatecoupon description]
      * @param  {object} data {id: id[] || id, fiedl: value}
      * @return {Promise}      
      */
-    updateActivity (data) { 
-      return updateActivity(data).then((res) => {
+    updateCoupon (data) { 
+      return updateCoupon(data).then((res) => {
         this.$Message.success('编辑成功！')
-        this.getActivityList()
+        this.getCouponList()
+        this.selectedIds = []
       }).catch(err => {
         this.$Message.error('编辑失败！')
       })
@@ -215,12 +224,11 @@ export default {
           full: '',
           reduce: ''
         },
-        products: [],
-        coupons: []
+        products: []
       }
     },
     handleEdit (id) {
-      getActivity(id).then(res => {
+      getCoupon(id).then(res => {
         res.products = res.products || []
         res.products = res.products.map((prod) => {
           prod._checked = true 
@@ -247,7 +255,7 @@ export default {
     }
   },
   mounted () {
-    this.getActivityList()
+    this.getCouponList()
   }
 }
 </script>

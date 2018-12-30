@@ -236,3 +236,8 @@ export const trancelate = {
   'admin': '账号权限',
   'role': '角色'
 }
+
+export const couponTypeMap = {
+  "1": '平台通用',
+  "2": '活动优惠'
+}

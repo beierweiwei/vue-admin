@@ -25,7 +25,7 @@ import Permission from '@/page/permission/Permission'
 import PermissionEdit from '@/page/permission/edit'
 import Role from '@/page/permission/Role'
 import Activity from '@/page/activity/index'
-import Coupon from '@/page/activity/coupon'
+import Coupon from '@/page/activity/coupon/index'
 const loginRoute = [{
     path: '/login/login',
     name: 'login',
