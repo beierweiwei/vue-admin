@@ -2,6 +2,10 @@
 
 > A Vue.js project
 
+## todo 
+* 会员中心
+* 活动商品过滤掉无效商品
+
 ## Build Setup
 
 ``` bash
