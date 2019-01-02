@@ -128,6 +128,7 @@ export default {
   data () {
     return {
       random: '',
+      id: '',
       formItem: {
         title: '',
         des: '',
@@ -135,24 +136,23 @@ export default {
         price: '',
         detail: '',
         date: '',
-        thumbPiic: [
-        ],
         unit: '',
         prop: '',
         cateId: '',
         subProds: [],
         stock: 1000,
       },
-      product: {},
       editor: null,
       propsSelect: [],
       propsCombine: [],
       cateList: [],
-      propList: []
+      propList: [],
+      defaultList: [],
+      uploadList: []
     }
   },
   methods: {
-    
+
     submit () {
       this.formItem.props = []
       // getPorp which was selected
@@ -170,7 +170,7 @@ export default {
     getProduct (id) {
       return getProduct(id)
     },
-    initData () {
+    initMyData () {
       this.formItem = {
         title: '',
         des: '',
@@ -178,45 +178,47 @@ export default {
         price: 200,
         detail: '',
         date: '',
-        thumbPiic: [],
         unit: '',
         prop: '',
         cateId: '',
         subProds: [],
         stock: 1000
       }
-      this.product = {}
       this.editor = null
       this.propsSelect = []
       this.propsCombine = []
-      this.defaultList = []
       this.imgName = ''
       this.imgViewVisible = false
-      this.uploadList = []
       this.baseUrl = SITE.origin
       this.cateList = []
       this.propList = []
+      this.defaultList = []
+      this.$refs.upload.clearFiles()
     },
     init () {
-      // 初始化数据
-      this.initData()
-      this.Api.getProductCateList().then(data => this.cateList = data)
       this.id = this.$route.params.id || 'add'
-
+      this.random = this.$route.query.r
+      // 初始化数据
+      this.initMyData()
+      this.Api.getProductCateList().then(data => this.cateList = data)
       if (this.id !== 'add') {
         this.getProduct(this.id).then(data => {
           this.formItem = data
           this.formItem.cateId = data.cateId && data.cateId._id
           this.propsSelect = _.zip(...data.subProds.map((sub) => sub.propItems.split(','))).map(prop => _.uniq(prop))
           if (Array.isArray(data.thumbPic) && data.thumbPic.length > 0) {
-            this.defaultList = data.thumbPic.map((pic) => {
-              return {
+            data.thumbPic.forEach((pic) => {
+              this.defaultList.push({
                 'name': pic.split('/upload/')[1],
                 'url': pic
-              }
+              })
             })
           }
         }).then(() => {
+          this.uploadList = this.$refs.upload.fileList
+        })
+      } else {
+        this.$nextTick(() => {
           this.uploadList = this.$refs.upload.fileList
         })
       }
@@ -239,28 +241,23 @@ export default {
         })
       })
     },
+
     getProdCateProps () {
       this.Api.getProductCate(this.formItem.cateId).then(data => {
         this.propList = data.props
       })
     }
   },
-  watch: {
-    '$route' (val) {
-      console.log(val)
-      let id = val.params.id || 'add'
-      let random = val.query.r
-      if (id !== this.id || this.random !== random) {
-        // id更新了，则清空数据，然后重新请求数据
-        this.init()
-      }
-      this.ranodm = random
-    },
-
+  activated () {
+    const id = this.$route.params.id
+    const r = this.$route.query.r
+    if (this.id !== id || this.random !== r) {
+      console.log('init-----------------')
+      this.init()
+    }
   },
   mounted () {
-    this.init()
-    this.uploadList = this.$refs.upload.fileList
+    // this.init()
     this.$nextTick(() => {
       let vm = this
       // todo tinymce 初始化报错
@@ -298,5 +295,5 @@ export default {
 }
 </script>
 <style>
-  
+
 </style>
