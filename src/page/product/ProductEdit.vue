@@ -60,7 +60,7 @@
         </Col>
     </FormItem>
     <FormItem label="规格">
-      <Row v-for="(prop, idx) in propList" :key="prop._id">
+      <Row v-for="(prop, idx) in propsOfProduct" :key="prop._id">
         <Col>{{prop.name}}</Col>
         <Col>
           <CheckboxGroup v-model="propsSelect[idx]" @on-change="getCombine">
@@ -137,7 +137,7 @@ export default {
         detail: '',
         date: '',
         unit: '',
-        prop: '',
+        props: [],
         cateId: '',
         subProds: [],
         stock: 1000,
@@ -151,17 +151,25 @@ export default {
       uploadList: []
     }
   },
+  computed: {
+    propsOfProduct () {
+      return this.id === 'add' ? this.propList : this.formItem.props
+    }
+  },
   methods: {
 
     submit () {
-      this.formItem.props = []
+      let _props = []
       // getPorp which was selected
       this.propsSelect.forEach((selector, idx) => {
         if (selector.length >>> 0) {
-          this.formItem.props.push(this.propList[idx]._id)
+          let curtProp = this.propsOfProduct[idx]
+          _props[idx] = {...curtProp}
+          _props[idx].selector = curtProp.selector.filter(select => ~selector.indexOf(select))
+
         }
       })
-      let data = {...this.formItem, thumbPic: this.uploadList.map((item) => item.url)}
+      let data = {...this.formItem, props: _props, thumbPic: this.uploadList.map((item) => item.url)}
       data.detail = tinymce.get('detail').getContent()
       editProduct(data, this.id).then(() => {
         this.$Message.success(this.id ? '编辑成功!' : '编辑成功!')
@@ -179,7 +187,7 @@ export default {
         detail: '',
         date: '',
         unit: '',
-        prop: '',
+        props: [],
         cateId: '',
         subProds: [],
         stock: 1000
@@ -224,7 +232,7 @@ export default {
       }
     },
     getCombine () {
-      if (this.propsSelect.length < this.propList.length) return
+      if (this.propsSelect.length < this.propsOfProduct.length) return
       let array = this.propsSelect.map(val => [...val])
       let combinProp = combine(array)
       let propsIds = array.map(prop => prop._id)
