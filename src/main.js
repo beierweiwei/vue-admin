@@ -44,11 +44,10 @@ function initApp (routes) {
 
 
 function getAdminInfo() {
-  Http.post('/admin/info')
+  Http.get('/admin/info')
   .then(res => {
     Vue.prototype.$hasPermission = hasPermission(res.permission)
     // 生成动态路由一定要在给vue原型绑定hasPermission后
-    console.log(appRoutes)
     let allowedRoutes = res.level < 2 ? appRoutes : dynmicCreateRoutes()
     Vue.prototype.$allowedRoutes = allowedRoutes
     window.$VUE_ADMIN.$router.addRoutes(allowedRoutes)

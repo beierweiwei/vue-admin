@@ -17,7 +17,6 @@ import Login from '@/page/login/Login'
 import Page404 from '@/page/error/404'
 import Page500 from '@/page/error/500'
 import Main from '@/page/Main'
-import AdminCenter from '@/page/login/User'
 import Article from '@/page/article/index'
 import ArticleCate from '@/page/article/cate'
 import ArticleEdit from '@/page/article/Edit'
@@ -26,22 +25,14 @@ import PermissionEdit from '@/page/permission/edit'
 import Role from '@/page/permission/Role'
 import Activity from '@/page/activity/index'
 import Coupon from '@/page/activity/coupon/index'
+import AdminInfo from '@/page/admin/info'
 const loginRoute = [{
     path: '/login/login',
     name: 'login',
     component: Login,
     title: '登陆'
-  },
-  //  {
-  //    path: '/login/register',
-  //    name: 'register',
-  //    component: Register
-  //  },
-  {
-    path: '/login/admincenter',
-    name: 'admincenter',
-    component: AdminCenter
   }
+
 ]
 const errorRoutes = [
 // {
@@ -74,6 +65,19 @@ export const appRoutes = [{
       name: 'home_index',
       meta: {
         title: '首页'
+      }
+    }]
+  },
+  {
+    path: '/admin',
+    name: 'admin',
+    component: Main,
+    children: [{
+      path: 'info',
+      component: AdminInfo,
+      name: 'admin_info',
+      meta: {
+        title: '管理员信息'
       }
     }]
   },

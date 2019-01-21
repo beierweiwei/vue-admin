@@ -229,7 +229,7 @@ export default {
           this.cateEditor.cates = this.cateList.filter(cate => cate.level < curtCate.level)
           this.Api.getProductCate(id).then(res => {
             this.cateEditor.form = res
-            this.cateEditor.form.props = this.cateEditor.props.map((prop => prop._id))
+            this.cateEditor.form.props = res.props.map((prop => prop._id))
             this.cateEditor.isShow = true
           })
           break
@@ -257,7 +257,7 @@ export default {
       console.log(key, order)
       let sortVals = ['asc', 'desc', 'nomal']
       let cfg = this.listReq
-      if (sortVals.indexOf(order) == 1) key = '-' + key 
+      if (sortVals.indexOf(order) == 1) key = '-' + key
       let reqStr = `?sort=${key}&pageSize=${cfg.pageSize}&curtPage=${cfg.curtPage}`
       this.getProductCateList(reqStr)
     }

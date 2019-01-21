@@ -14,9 +14,19 @@
       <Col span="10" push="4">
         <div style="text-align: right">
           <template v-if="user">
-            <span>用户：</span>
-            <router-link :to="'/login/admincenter'">{{user.username}}</router-link>
-            <span  @click="logout">退出</span>
+            <Dropdown @on-click="handleClick" style="text-align: left">
+                <Badge dot count="4">
+                   <Avatar  :src="user.avatar"  icon="ios-person" size="small"/>
+                </Badge>
+                <Icon type="arrow-down-b" ></Icon>
+                <DropdownMenu slot="list">
+                    <DropdownItem>通知</DropdownItem>
+                    <DropdownItem name="/admin/info">我的信息</DropdownItem>
+                    <DropdownItem name="logout">退出</DropdownItem>
+                </DropdownMenu>
+            </Dropdown>
+
+           <!--  <router-link to="/admin/info">{{user.username}}</router-link> -->
           </template>
           <router-link v-else to="/login/login">登陆</router-link>
         </div>
@@ -56,6 +66,16 @@ export default {
       this.user = null
       this.$help.cookie.set('user', '')
       this.$router.push('/login/login')
+    },
+    handleClick (name) {
+      console.log(name)
+      switch (name) {
+        case 'logout':
+          this.logout()
+          break;
+        default:
+          this.$router.push(name)
+      }
     }
   },
   mounted () {

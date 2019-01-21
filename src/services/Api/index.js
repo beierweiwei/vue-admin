@@ -38,7 +38,7 @@ export function updateOrders (ids, modify) {
 
 export function updateOrder (id, modify) {
   return Http.post('/order/update/' + id, modify)
-} 
+}
 
 export function postLogin (data) {
   return Http.post('/admin/login', data)
@@ -175,7 +175,7 @@ export function getArticle(id) {
 }
 
 export function updateArticle(data) {
-  return Http.post('/article', data )      
+  return Http.post('/article', data )
 }
 
 export function deleteArticle(data) {
@@ -204,7 +204,7 @@ export function getRoleList (data) {
 
 export function getRole (id) {
   return Http.get('/permission/' + id)
-} 
+}
 export function createRole (data) {
   return Http.post('/permission', data)
 }
@@ -265,4 +265,12 @@ export function deleteCoupon (data) {
 
 export function createCoupon (data) {
   return Http.post('/activity/coupon', data)
+}
+
+export function getAdminInfo () {
+  return Http.get('/admin/info')
+}
+
+export function updateAdminInfo (data) {
+  return Http.post('/admin/info', data)
 }
