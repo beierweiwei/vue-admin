@@ -16,13 +16,13 @@
           <template v-if="user">
             <Dropdown @on-click="handleClick" style="text-align: left">
                 <Badge dot count="4">
-                   <Avatar  :src="user.avatar"  icon="ios-person" size="small"/>
+                   <Avatar :src="user.avatar"  icon="ios-person" size="small"/>
                 </Badge>
                 <Icon type="arrow-down-b" ></Icon>
                 <DropdownMenu slot="list">
-                    <DropdownItem>通知</DropdownItem>
+                    <DropdownItem>消息通知</DropdownItem>
                     <DropdownItem name="/admin/info">我的信息</DropdownItem>
-                    <DropdownItem name="logout">退出</DropdownItem>
+                    <DropdownItem name="logout">退出登录</DropdownItem>
                 </DropdownMenu>
             </Dropdown>
 
