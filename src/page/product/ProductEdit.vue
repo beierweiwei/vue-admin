@@ -67,6 +67,7 @@
             <Checkbox v-for="select in prop.selector" :key="select" :value="select" :label="select" ></Checkbox>
           </CheckboxGroup>
         </Col>
+        <!-- <Col><Button @click="onEditProps">编辑规格</Button></Col> -->
       </Row>
     </FormItem>
     <FormItem label="子商品">
@@ -153,7 +154,7 @@ export default {
   },
   computed: {
     propsOfProduct () {
-      return this.id === 'add' ? this.propList : this.formItem.props
+      return this.propList
     }
   },
   methods: {
@@ -249,11 +250,13 @@ export default {
         })
       })
     },
-
     getProdCateProps () {
       this.Api.getProductCate(this.formItem.cateId).then(data => {
         this.propList = data.props
       })
+    },
+    onEditProps () {
+
     }
   },
   activated () {

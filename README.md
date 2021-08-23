@@ -1,6 +1,6 @@
-# vue-admin
+# MyShop Admin
 
-> A Vue.js project
+> a admin for a shop system
 
 ## todo 
 * 会员中心
